@@ -7,6 +7,7 @@ namespace A2v10.ProcS.Chatbot
 {
 	public class SendMessage : IWorkflowAction
 	{
+		Guid ChatId { get; set; }
 		OutgoingMessage Message { get; set; }
 
 		public Task<ActionResult> Execute(IExecuteContext context)
