@@ -1,0 +1,27 @@
+{
+	"$schema": "../../../A2v10.ProcS/@schemas/statemachine-schema.json",
+	"Description": "ChatBotExample",
+	"InitialState": "S1",
+	"States": {
+		"S1": {
+			"OnEntry": {
+				"$type": "A2v10.ProcS.Chatbot.SendMessage, A2v10.ProcS.Chatbot",
+				"BotEngine": "Telegram",
+				"ChatId": "",
+				"Message": {
+					"Type": "Text",
+					"Text": "Hi there!"
+				}
+			},
+			"Transitions": {
+				"S1->End": {
+					"Description": "From S1 to End",
+					"To": "End"
+				}
+			}
+		},
+		"End": {
+			"Description": "State End"
+		}
+	}
+}
