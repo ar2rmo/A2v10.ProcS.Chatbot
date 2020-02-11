@@ -16,8 +16,9 @@ namespace A2v10.ProcS.Chatbot
             BotManager = new BotManager(configuration.GetSection("ChatBots"));
 
             var epm = provider.GetService<IEndpointManager>();
+            var bus = provider.GetService<IServiceBus>();
 
-            epm.RegisterEndpoint("telegram", new EndpointHandlerFactory(BotEngine.Telegram, BotManager));
+            epm.RegisterEndpoint("telegram", new EndpointHandlerFactory(bus, BotEngine.Telegram, BotManager));
         }
     }
 }

@@ -80,35 +80,67 @@ namespace A2v10.ProcS.Chatbot
 
 	internal class EndpointHandlerFactory : IEndpointHandlerFactory
 	{
-		private BotEngine engine;
-		private BotManager botManager;
+		private readonly BotEngine engine;
+		private readonly BotManager botManager;
+		private readonly IServiceBus bus;
 
-		public EndpointHandlerFactory(BotEngine engine, BotManager botManager)
+		public EndpointHandlerFactory(IServiceBus bus, BotEngine engine, BotManager botManager)
 		{
+			this.bus = bus;
 			this.engine = engine;
 			this.botManager = botManager;
 		}
 
 		public IEndpointHandler CreateHandler()
 		{
-			return new EndpointHandler(engine, botManager);
+			return new EndpointHandler(bus, engine, botManager);
 		}
 	}
 
 	internal class EndpointHandler : IEndpointHandler
 	{
-		private BotEngine engine;
-		private BotManager botManager;
+		private readonly BotEngine engine;
+		private readonly BotManager botManager;
+		private readonly IServiceBus bus;
 
-		public EndpointHandler(BotEngine engine, BotManager botManager)
+		public EndpointHandler(IServiceBus bus, BotEngine engine, BotManager botManager)
 		{
+			this.bus = bus;
 			this.engine = engine;
 			this.botManager = botManager;
 		}
 
-		public Task<(string body, string type)> HandleAsync(string body, string path)
+		public async Task<(string body, string type)> HandleAsync(string body, string path)
 		{
-			throw new NotImplementedException();
+			var pathes = path.Split('/');
+			var proc = new MessageProcessor(bus, engine, pathes[0]);
+			var bot = await botManager.GetBotAsync(engine, pathes[0]);
+			await bot.ProcessIncomingMessageAsync(body, proc);
+			return ("", "text/plain");
 		}
 	}
+
+    internal class MessageProcessor : IMessageProcessor
+    {
+		private readonly BotEngine engine;
+		private readonly String key;
+		private readonly IServiceBus bus;
+
+		public MessageProcessor(IServiceBus bus, BotEngine engine, String key)
+        {
+			this.bus = bus;
+            this.engine = engine;
+			this.key = key;
+		}
+
+		public IEnumerable<IOutgoingMessage> ProcessIncomingMessage(IChatSession sess, IIncomingMessage msg)
+        {
+			var m = new IncomeMessage(sess.ChatId);
+			m.BotEngine = engine;
+			m.BotKey = key;
+			m.Message = msg;
+			bus.Send(m);
+			yield break;
+		}
+    }
 }

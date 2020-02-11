@@ -2,6 +2,7 @@ using A2v10.ProcS.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -14,11 +15,16 @@ namespace A2v10.ProcS.Chatbot.Tests
     {
 		public class Services : IServiceProvider
 		{
-			private Object[] services;
+			private List<Object> services;
 
 			public Services(params Object[] svcs)
 			{
-				services = svcs;
+				services = new List<object>(svcs);
+			}
+
+            public void Add(Object obj)
+            {
+				services.Add(obj);
 			}
 
 			public object GetService(Type serviceType)
@@ -52,6 +58,8 @@ namespace A2v10.ProcS.Chatbot.Tests
 			var repository = new Repository(storage, storage);
 			var bus = new ServiceBus(keeper, repository, scriptEngine);
 			var engine = new WorkflowEngine(repository, bus, scriptEngine);
+			sp.Add(bus);
+			sp.Add(engine);
 
 			IInstance inst = await engine.StartWorkflow(new Identity("ChatBotExample.json"));
 			

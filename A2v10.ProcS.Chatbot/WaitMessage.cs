@@ -15,6 +15,7 @@ namespace A2v10.ProcS.Chatbot
 		{
 			await context.SaveInstance();
 			var mess = new WaitMessageMessage(ChatId);
+			mess.ProcessId = context.Instance.Id;
 			mess.BotEngine = BotEngine;
 			mess.BotKey = BotKey;
 			context.SendMessage(mess);
@@ -24,7 +25,8 @@ namespace A2v10.ProcS.Chatbot
 
 	public class WaitMessageMessage : MessageBase<Guid>
 	{
-		public BotEngine BotEngine { get; set; }
+        public Guid ProcessId { get; set; }
+        public BotEngine BotEngine { get; set; }
 		public String BotKey { get; set; }
 
 		public WaitMessageMessage(Guid chatId) : base(chatId)

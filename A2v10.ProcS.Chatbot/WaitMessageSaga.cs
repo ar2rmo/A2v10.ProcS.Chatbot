@@ -12,7 +12,7 @@ namespace A2v10.ProcS.Chatbot
 	{
 		public BotEngine BotEngine { get; set; }
 		public String BotKey { get; set; }
-		public String RawBody { get; set; }
+        public IIncomingMessage Message { get; set; }
 
 		public IncomeMessage(Guid chatId) : base(chatId)
 		{
@@ -23,6 +23,10 @@ namespace A2v10.ProcS.Chatbot
 	{
 		private BotManager botManager;
 
+		private Guid ProcessId { get; set; }
+		private BotEngine BotEngine { get; set; }
+		private String BotKey { get; set; }
+
 		internal WaitMessageSaga(BotManager botManager) : base(nameof(SendMessageSaga))
 		{
 			this.botManager = botManager;
@@ -30,11 +34,18 @@ namespace A2v10.ProcS.Chatbot
 
 		protected override Task Handle(IHandleContext context, WaitMessageMessage message)
 		{
+			ProcessId = message.ProcessId;
+			BotEngine = message.BotEngine;
+			BotKey = message.BotKey;
+			CorrelationId.Value = message.CorrelationId.Value;
 			return Task.CompletedTask;
 		}
 
 		protected override Task Handle(IHandleContext context, IncomeMessage message)
 		{
+			var resumeProcess = new ResumeProcessMessage(ProcessId, DynamicObject.From(message));
+			context.SendMessage(resumeProcess);
+			IsComplete = true;
 			return Task.CompletedTask;
 		}
 	}
