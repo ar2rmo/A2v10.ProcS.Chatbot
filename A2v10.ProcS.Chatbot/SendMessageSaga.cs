@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Threading.Tasks;
 using A2v10.ProcS.Infrastructure;
-using BotCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace A2v10.ProcS.Chatbot
 {
 	public class SendMessageSaga : SagaBaseDispatched<Guid, SendMessageMessage>
 	{
-		private IBot bot;
+		private IBotFactory botFactory;
 
-		public SendMessageSaga(IBot bot) : base(nameof(SendMessageSaga))
+		internal SendMessageSaga(IBotFactory botFactory) : base(nameof(SendMessageSaga))
 		{
-			this.bot = bot;
+			this.botFactory = botFactory;
 		}
 
 		protected override Task Handle(IHandleContext context, SendMessageMessage message)
@@ -21,34 +22,35 @@ namespace A2v10.ProcS.Chatbot
 		}
 	}
 
-	public class SendMessageSagaFactory : ISagaFactory
+	internal class SendMessageSagaFactory : ISagaFactory
 	{
-		private Lazy<IBot> botProvider;
+		private IBotFactory botFactory;
 		
-		public SendMessageSagaFactory(Lazy<IBot> botProvider)
+		public SendMessageSagaFactory(IBotFactory botFactory)
 		{
-			this.botProvider = botProvider;
+			this.botFactory = botFactory;
 		}
 
 		public string SagaKind => nameof(SendMessageSaga);
 
 		public ISaga CreateSaga()
 		{
-			return new SendMessageSaga(botProvider.Value);
+			return new SendMessageSaga(botFactory);
 		}
 	}
 
 	public class SendMessageSagaRegistrar : ISagaRegistrar
 	{
-		private IBot CreateBot()
+		private Plugin plugin;
+
+		public SendMessageSagaRegistrar(Plugin plugin)
 		{
-			var cfg = new BotCore.Types.Base.Configure();
-			return new BotCore.Telegram.ActiveTelegramBot(cfg);
+			this.plugin = plugin;
 		}
 
-		public void Register(ISagaManager mgr, IServiceProvider provider)
+		public void Register(ISagaManager mgr)
 		{
-			var factory = new SendMessageSagaFactory(new Lazy<IBot>(CreateBot, true));
+			var factory = new SendMessageSagaFactory(plugin.TelegramBotFactory);
 			mgr.RegisterSagaFactory(factory, SendMessageSaga.GetHandledTypes());
 		}
 	}

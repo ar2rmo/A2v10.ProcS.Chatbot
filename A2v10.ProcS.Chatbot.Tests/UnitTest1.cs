@@ -1,4 +1,5 @@
 using A2v10.ProcS.Infrastructure;
+using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
@@ -11,15 +12,40 @@ namespace A2v10.ProcS.Chatbot.Tests
     [TestClass]
     public class ChatbotTest1
     {
-        [TestMethod]
+		public class Services : IServiceProvider
+		{
+			private Object[] services;
+
+			public Services(params Object[] svcs)
+			{
+				services = svcs;
+			}
+
+			public object GetService(Type serviceType)
+			{
+				foreach (var s in services)
+				{
+					if (serviceType.IsAssignableFrom(s.GetType())) return s;
+				}
+				return null;
+			}
+		}
+
+		[TestMethod]
         public async Task RunWorkflow()
         {
+			var epm = new EndpointManager();
+
+			var sp = new Services(epm);
+
 			var storage = new ProcS.Tests.FakeStorage("../../../workflows/");
-			var mgr = new SagaManager();
+			var mgr = new SagaManager(sp);
 			
 			String pluginPath = GetPluginPath();
 
-			mgr.LoadPlugins(pluginPath);
+			var configuration = new ConfigurationBuilder().Build();
+
+			mgr.LoadPlugins(pluginPath, configuration);
 
 			var keeper = new InMemorySagaKeeper(mgr);
 			var scriptEngine = new ScriptEngine();

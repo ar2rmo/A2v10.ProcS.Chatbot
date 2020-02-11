@@ -8,6 +8,7 @@ namespace A2v10.ProcS.Chatbot
 	public class SendMessage : IWorkflowAction
 	{
 		BotEngine BotEngine { get; set; }
+		String BotKey { get; set; }
 		Guid ChatId { get; set; }
 		OutgoingMessage Message { get; set; }
 

@@ -1,21 +1,18 @@
 {
 	"$schema": "../../../A2v10.ProcS/@schemas/statemachine-schema.json",
 	"Description": "ChatBotExample",
-	"InitialState": "S1",
+	"InitialState": "WaitForMessage",
 	"States": {
-		"S1": {
+		"WaitForMessage": {
 			"OnEntry": {
-				"$type": "A2v10.ProcS.Chatbot.SendMessage, A2v10.ProcS.Chatbot",
+				"$type": "A2v10.ProcS.Chatbot.WaitMessage, A2v10.ProcS.Chatbot",
 				"BotEngine": "Telegram",
-				"ChatId": "",
-				"Message": {
-					"Type": "Text",
-					"Text": "Hi there!"
-				}
+				"BotKey": "TestBot",
+				"ChatId": "*"
 			},
 			"Transitions": {
-				"S1->End": {
-					"Description": "From S1 to End",
+				"WaitForMessage->End": {
+					"Description": "From WaitForMessage to End",
 					"To": "End"
 				}
 			}
