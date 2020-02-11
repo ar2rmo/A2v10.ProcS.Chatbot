@@ -9,18 +9,15 @@ namespace A2v10.ProcS.Chatbot
 {
     public class Plugin : IPlugin
     {
-        internal TelegramBotFactory TelegramBotFactory { get; private set; }
+        internal BotManager BotManager { get; private set; }
 
         public void Init(IServiceProvider provider, IConfiguration configuration)
         {
+            BotManager = new BotManager(configuration.GetSection("ChatBots"));
+
             var epm = provider.GetService<IEndpointManager>();
 
-            var tbf = new TelegramBotFactory(configuration);
-            var tephf = new EndpointHandlerFactory(tbf);
-
-            epm.RegisterEndpoint("telegram", tephf);
-
-            TelegramBotFactory = tbf;
+            epm.RegisterEndpoint("telegram", new EndpointHandlerFactory(BotEngine.Telegram, BotManager));
         }
     }
 }

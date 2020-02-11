@@ -8,11 +8,11 @@ namespace A2v10.ProcS.Chatbot
 {
 	public class SendMessageSaga : SagaBaseDispatched<Guid, SendMessageMessage>
 	{
-		private IBotFactory botFactory;
+		private BotManager botManager;
 
-		internal SendMessageSaga(IBotFactory botFactory) : base(nameof(SendMessageSaga))
+		internal SendMessageSaga(BotManager botManager) : base(nameof(SendMessageSaga))
 		{
-			this.botFactory = botFactory;
+			this.botManager = botManager;
 		}
 
 		protected override Task Handle(IHandleContext context, SendMessageMessage message)
@@ -24,18 +24,18 @@ namespace A2v10.ProcS.Chatbot
 
 	internal class SendMessageSagaFactory : ISagaFactory
 	{
-		private IBotFactory botFactory;
+		private BotManager botManager;
 		
-		public SendMessageSagaFactory(IBotFactory botFactory)
+		public SendMessageSagaFactory(BotManager botManager)
 		{
-			this.botFactory = botFactory;
+			this.botManager = botManager;
 		}
 
 		public string SagaKind => nameof(SendMessageSaga);
 
 		public ISaga CreateSaga()
 		{
-			return new SendMessageSaga(botFactory);
+			return new SendMessageSaga(botManager);
 		}
 	}
 
@@ -50,7 +50,7 @@ namespace A2v10.ProcS.Chatbot
 
 		public void Register(ISagaManager mgr)
 		{
-			var factory = new SendMessageSagaFactory(plugin.TelegramBotFactory);
+			var factory = new SendMessageSagaFactory(plugin.BotManager);
 			mgr.RegisterSagaFactory(factory, SendMessageSaga.GetHandledTypes());
 		}
 	}
