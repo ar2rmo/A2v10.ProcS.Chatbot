@@ -63,7 +63,7 @@ namespace A2v10.ProcS.Chatbot.Tests
 
 			IInstance inst = await engine.StartWorkflow(new Identity("ChatBotExample.json"));
 			
-			await bus.Run();
+			await bus.Run(bus.CancelWhenEmpty.Token);
 
 			Assert.AreEqual("End", inst.CurrentState);
 		}
