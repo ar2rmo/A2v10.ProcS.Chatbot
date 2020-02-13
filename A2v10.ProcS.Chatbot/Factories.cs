@@ -26,7 +26,7 @@ namespace A2v10.ProcS.Chatbot
 			factories.Add(BotEngine.Telegram, new TelegramBotFactory(configuration.GetSection("Telegram")));
 
 			bots = new Dictionary<BotEngine, ConcurrentDictionary<String, (Boolean, SemaphoreSlim, IBot)>>();
-			bots.Add(BotEngine.Telegram, new ConcurrentDictionary<String, (Boolean, SemaphoreSlim, IBot)>());
+			bots.Add(BotEngine.Telegram, new ConcurrentDictionary<String, (Boolean, SemaphoreSlim, IBot)>(StringComparer.InvariantCultureIgnoreCase));
 		}
 
 		public async Task<IBot> GetBotAsync(BotEngine engine, String key)
@@ -73,7 +73,7 @@ namespace A2v10.ProcS.Chatbot
 
 			var cfg = new BotCore.Types.Base.Configure();
 			cfg.Token = cs["Token"];
-			cfg.WebHook = "";
+			cfg.WebHook = cs["WebHookUri"];
 			return new BotCore.Telegram.TelegramBot(cfg);
 		}
 	}
@@ -113,8 +113,8 @@ namespace A2v10.ProcS.Chatbot
 		public async Task<(string body, string type)> HandleAsync(string body, string path)
 		{
 			var pathes = path.Split('/');
-			var proc = new MessageProcessor(bus, engine, pathes[0]);
 			var bot = await botManager.GetBotAsync(engine, pathes[0]);
+			var proc = new MessageProcessor(bus, engine, pathes[0]);
 			await bot.ProcessIncomingMessageAsync(body, proc);
 			return ("", "text/plain");
 		}

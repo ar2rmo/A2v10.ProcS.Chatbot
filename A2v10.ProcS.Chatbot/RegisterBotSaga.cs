@@ -8,29 +8,64 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace A2v10.ProcS.Chatbot
 {
-	public class RegisterBotMessage : MessageBase<String>
+	public class RegisterBotProcessingMessage : MessageBase<String>
+	{
+		public Guid MasterProcessId { get; set; }
+		public BotEngine BotEngine { get; set; }
+		public String BotKey { get; set; }
+		public String ChatProcessIdentity { get; set; }
+
+		public RegisterBotProcessingMessage(BotEngine botEngine, String botKey) : base($"{botEngine}:{botKey}")
+		{
+			BotEngine = botEngine;
+			BotKey = botKey;
+		}
+	}
+
+	public class InitBotChatMessage : MessageBase<String>
 	{
 		public BotEngine BotEngine { get; set; }
 		public String BotKey { get; set; }
+		public Guid ChatId { get; set; }
+		public IIncomingMessage Message { get; set; }
 
-		public RegisterBotMessage(BotEngine botEngine, String botKey) : base($"{botEngine}:{botKey}")
+		public InitBotChatMessage(BotEngine botEngine, String botKey) : base($"{botEngine}:{botKey}")
 		{
 		}
 	}
 
-	public class RegisterBotSaga : SagaBaseDispatched<String, RegisterBotMessage>
+	public class RegisterBotProcessingSaga : SagaBaseDispatched<String, RegisterBotProcessingMessage, InitBotChatMessage>
 	{
 		private BotManager botManager;
 
-		internal RegisterBotSaga(BotManager botManager) : base(nameof(RegisterBotSaga))
+		private Guid MasterProcessId { get; set; }
+		private String ChatProcessIdentity { get; set; }
+
+		internal RegisterBotProcessingSaga(BotManager botManager) : base(nameof(RegisterBotProcessingSaga))
 		{
 			this.botManager = botManager;
 		}
 
-		protected override async Task Handle(IHandleContext context, RegisterBotMessage message)
+		protected override async Task Handle(IHandleContext context, RegisterBotProcessingMessage message)
 		{
 			var bot = await botManager.GetBotAsync(message.BotEngine, message.BotKey);
-            CorrelationId.Value = message.CorrelationId.Value;
+			MasterProcessId = message.MasterProcessId;
+			ChatProcessIdentity = message.ChatProcessIdentity;
+			CorrelationId.Value = message.CorrelationId.Value;
+		}
+
+		protected override Task Handle(IHandleContext context, InitBotChatMessage message)
+		{
+			var sp = new StartProcessMessage(MasterProcessId);
+			sp.ProcessId = ChatProcessIdentity;
+			sp.Parameters = DynamicObject.From(message.Message);
+			context.SendMessage(sp);
+			var m = new IncomeMessage(message.ChatId);
+			m.BotEngine = message.BotEngine;
+			m.BotKey = message.BotKey;
+			m.Message = message.Message;
+			context.SendMessage(m);
+			return Task.CompletedTask;
 		}
 	}
 
@@ -43,11 +78,11 @@ namespace A2v10.ProcS.Chatbot
 			this.botManager = botManager;
 		}
 
-		public string SagaKind => nameof(RegisterBotSaga);
+		public string SagaKind => nameof(RegisterBotProcessingSaga);
 
 		public ISaga CreateSaga()
 		{
-			return new RegisterBotSaga(botManager);
+			return new RegisterBotProcessingSaga(botManager);
 		}
 	}
 
@@ -63,7 +98,7 @@ namespace A2v10.ProcS.Chatbot
 		public void Register(ISagaManager mgr)
 		{
 			var factory = new RegisterBotSagaFactory(plugin.BotManager);
-			mgr.RegisterSagaFactory(factory, RegisterBotSaga.GetHandledTypes());
+			mgr.RegisterSagaFactory(factory, RegisterBotProcessingSaga.GetHandledTypes());
 		}
 	}
 }

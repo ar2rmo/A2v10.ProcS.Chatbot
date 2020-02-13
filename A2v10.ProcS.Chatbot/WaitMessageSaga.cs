@@ -23,12 +23,15 @@ namespace A2v10.ProcS.Chatbot
 	{
 		private BotManager botManager;
 
+		
+		private Boolean IsWaiting { get; set; }
 		private Guid ProcessId { get; set; }
 		private BotEngine BotEngine { get; set; }
 		private String BotKey { get; set; }
 
 		internal WaitMessageSaga(BotManager botManager) : base(nameof(SendMessageSaga))
 		{
+			IsWaiting = false;
 			this.botManager = botManager;
 		}
 
@@ -38,14 +41,26 @@ namespace A2v10.ProcS.Chatbot
 			BotEngine = message.BotEngine;
 			BotKey = message.BotKey;
 			CorrelationId.Value = message.CorrelationId.Value;
+			IsWaiting = true;
 			return Task.CompletedTask;
 		}
 
 		protected override Task Handle(IHandleContext context, IncomeMessage message)
 		{
-			var resumeProcess = new ResumeProcessMessage(ProcessId, DynamicObject.From(message));
-			context.SendMessage(resumeProcess);
-			IsComplete = true;
+			if (IsWaiting)
+			{
+				var resumeProcess = new ResumeProcessMessage(ProcessId, DynamicObject.From(message));
+				context.SendMessage(resumeProcess);
+				IsComplete = true;
+			}
+			else
+			{
+				var m = new InitBotChatMessage(message.BotEngine, message.BotKey);
+				m.ChatId = message.CorrelationId.Value;
+				m.Message = message.Message;
+				context.SendMessage(m);
+				IsComplete = true;
+			}
 			return Task.CompletedTask;
 		}
 	}
