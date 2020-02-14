@@ -18,38 +18,66 @@ namespace A2v10.ProcS.Chatbot
 	internal class BotManager
 	{
 		private IDictionary<BotEngine, IBotFactory> factories;
-		private IDictionary<BotEngine, ConcurrentDictionary<String, (Boolean isInit, SemaphoreSlim sem, IBot bot)>> bots;
+		private IDictionary<BotEngine, ConcurrentDictionary<String, BotWrapper>> bots;
 
 		public BotManager(Microsoft.Extensions.Configuration.IConfiguration configuration)
 		{
 			factories = new Dictionary<BotEngine, IBotFactory>();
 			factories.Add(BotEngine.Telegram, new TelegramBotFactory(configuration.GetSection("Telegram")));
 
-			bots = new Dictionary<BotEngine, ConcurrentDictionary<String, (Boolean, SemaphoreSlim, IBot)>>();
-			bots.Add(BotEngine.Telegram, new ConcurrentDictionary<String, (Boolean, SemaphoreSlim, IBot)>(StringComparer.InvariantCultureIgnoreCase));
+			bots = new Dictionary<BotEngine, ConcurrentDictionary<String, BotWrapper>>();
+			bots.Add(BotEngine.Telegram, new ConcurrentDictionary<String, BotWrapper>(StringComparer.InvariantCultureIgnoreCase));
+		}
+
+		protected class BotWrapper
+		{
+			private readonly IBot bot;
+			private readonly SemaphoreSlim sem;
+			private Boolean isInit;
+
+			public IBot Bot
+			{
+				get
+				{
+					if (!isInit) throw new InvalidOperationException("Bot is not Init");
+					return bot;
+				}
+			}
+
+			public BotWrapper(IBot bot)
+			{
+				isInit = false;
+				this.bot = bot;
+				sem = new SemaphoreSlim(1, 1);
+			}
+
+			public async Task SafeInit()
+			{
+				if (isInit) return;
+				await sem.WaitAsync();
+				try
+				{
+					if (isInit) return;
+					await bot.InitAsync();
+					isInit = true;
+				}
+				finally
+				{
+					sem.Release();
+				}
+			}
 		}
 
 		public async Task<IBot> GetBotAsync(BotEngine engine, String key)
 		{
 			var bts = bots[engine];
-			var x = bts.GetOrAdd(key, k =>
+			var w = bts.GetOrAdd(key, k =>
 			{
 				var f = factories[engine];
-				return (false, new SemaphoreSlim(1, 1), f.CreateBot(k));
+				return new BotWrapper(f.CreateBot(k));
 			});
-			if (x.isInit) return x.bot;
-			await x.sem.WaitAsync();
-			try
-			{
-				if (x.isInit) return x.bot;
-				await x.bot.InitAsync();
-				x.isInit = true;
-				return x.bot;
-			}
-			finally
-			{
-				x.sem.Release();
-			}
+			await w.SafeInit();
+			return w.Bot;
 		}
 	}
 

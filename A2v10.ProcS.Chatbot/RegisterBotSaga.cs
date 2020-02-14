@@ -15,7 +15,7 @@ namespace A2v10.ProcS.Chatbot
 		public String BotKey { get; set; }
 		public String ChatProcessIdentity { get; set; }
 
-		public RegisterBotProcessingMessage(BotEngine botEngine, String botKey) : base($"{botEngine}:{botKey}")
+		public RegisterBotProcessingMessage(BotEngine botEngine, String botKey) : base($"{botEngine}:{botKey.ToLowerInvariant()}")
 		{
 			BotEngine = botEngine;
 			BotKey = botKey;
@@ -29,7 +29,7 @@ namespace A2v10.ProcS.Chatbot
 		public Guid ChatId { get; set; }
 		public IIncomingMessage Message { get; set; }
 
-		public InitBotChatMessage(BotEngine botEngine, String botKey) : base($"{botEngine}:{botKey}")
+		public InitBotChatMessage(BotEngine botEngine, String botKey) : base($"{botEngine}:{botKey.ToLowerInvariant()}")
 		{
 		}
 	}
@@ -58,7 +58,7 @@ namespace A2v10.ProcS.Chatbot
 		{
 			var sp = new StartProcessMessage(MasterProcessId);
 			sp.ProcessId = ChatProcessIdentity;
-			sp.Parameters = DynamicObject.From(message.Message);
+			sp.Parameters = DynamicObject.From<InitBotChatMessage, IIncomingMessage>(message);
 			context.SendMessage(sp);
 			var m = new IncomeMessage(message.ChatId);
 			m.BotEngine = message.BotEngine;

@@ -7,14 +7,20 @@ namespace A2v10.ProcS.Chatbot
 {
 	public class WaitMessage : IWorkflowAction
 	{
+		public WaitMessage()
+		{
+
+		}
+
 		BotEngine BotEngine { get; set; }
 		String BotKey { get; set; }
-		Guid ChatId { get; set; }
+		String ChatId { get; set; }
 
 		public async Task<ActionResult> Execute(IExecuteContext context)
 		{
+			var ch = Guid.Parse(context.Resolve(ChatId));
 			await context.SaveInstance();
-			var mess = new WaitMessageMessage(ChatId);
+			var mess = new WaitMessageMessage(ch);
 			mess.ProcessId = context.Instance.Id;
 			mess.BotEngine = BotEngine;
 			mess.BotKey = BotKey;
