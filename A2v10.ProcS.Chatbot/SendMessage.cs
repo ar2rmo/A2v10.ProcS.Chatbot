@@ -7,10 +7,10 @@ namespace A2v10.ProcS.Chatbot
 {
 	public class SendMessage : IWorkflowAction
 	{
-		BotEngine BotEngine { get; set; }
-		String BotKey { get; set; }
-		Guid ChatId { get; set; }
-		OutgoingMessage Message { get; set; }
+		public BotEngine BotEngine { get; set; }
+		public String BotKey { get; set; }
+		public Guid ChatId { get; set; }
+		public OutgoingMessage Message { get; set; }
 
 		public Task<ActionResult> Execute(IExecuteContext context)
 		{

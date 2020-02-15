@@ -12,9 +12,9 @@ namespace A2v10.ProcS.Chatbot
 
 		}
 
-		BotEngine BotEngine { get; set; }
-		String BotKey { get; set; }
-		String ChatId { get; set; }
+		public BotEngine BotEngine { get; set; }
+		public String BotKey { get; set; }
+		public String ChatId { get; set; }
 
 		public async Task<ActionResult> Execute(IExecuteContext context)
 		{
