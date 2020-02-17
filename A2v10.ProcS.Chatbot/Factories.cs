@@ -171,4 +171,13 @@ namespace A2v10.ProcS.Chatbot
 			yield break;
 		}
     }
+
+	internal class ChatSession : IChatSession
+	{
+		public ChatSession(Guid guid)
+		{
+			ChatId = guid;
+		}
+		public Guid ChatId { get; private set; }
+	}
 }

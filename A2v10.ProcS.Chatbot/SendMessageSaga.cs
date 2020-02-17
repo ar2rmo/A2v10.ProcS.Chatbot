@@ -15,10 +15,10 @@ namespace A2v10.ProcS.Chatbot
 			this.botManager = botManager;
 		}
 
-		protected override Task Handle(IHandleContext context, SendMessageMessage message)
+		protected override async Task Handle(IHandleContext context, SendMessageMessage message)
 		{
-			//bot.SendMessageAsync(message)
-			return Task.CompletedTask;
+			var bot = await botManager.GetBotAsync(message.BotEngine, message.BotKey);
+			await bot.SendMessageAsync(new ChatSession(message.ChatId), message.Message);
 		}
 	}
 

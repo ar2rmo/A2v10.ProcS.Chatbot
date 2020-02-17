@@ -9,12 +9,15 @@ namespace A2v10.ProcS.Chatbot
 	{
 		public BotEngine BotEngine { get; set; }
 		public String BotKey { get; set; }
-		public Guid ChatId { get; set; }
+		public String ChatId { get; set; }
 		public OutgoingMessage Message { get; set; }
 
 		public Task<ActionResult> Execute(IExecuteContext context)
 		{
 			var mess = new SendMessageMessage(Message);
+			mess.BotEngine = BotEngine;
+			mess.BotKey = BotKey;
+			mess.ChatId = Guid.Parse(context.Resolve(ChatId));
 			context.SendMessage(mess);
 			return Task.FromResult(ActionResult.Success);
 		}
@@ -22,11 +25,10 @@ namespace A2v10.ProcS.Chatbot
 
 	public class SendMessageMessage : MessageBase<Guid>
 	{
-		BotEngine BotEngine { get; set; }
-
-		Guid ChatId { get; set; }
-
-		OutgoingMessage Message { get; set; }
+		public BotEngine BotEngine { get; set; }
+		public String BotKey { get; set; }
+		public Guid ChatId { get; set; }
+		public OutgoingMessage Message { get; set; }
 
 		public SendMessageMessage(OutgoingMessage message) : base(Guid.NewGuid())
 		{

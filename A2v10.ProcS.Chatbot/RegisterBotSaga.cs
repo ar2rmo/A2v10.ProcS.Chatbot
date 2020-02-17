@@ -61,12 +61,14 @@ namespace A2v10.ProcS.Chatbot
 			var sp = new StartProcessMessage(MasterProcessId);
 			sp.ProcessId = ChatProcessIdentity;
 			sp.Parameters = DynamicObject.From<InitBotChatMessage, IIncomingMessage>(message);
-			context.SendMessage(sp);
+
 			var m = new IncomeMessage(message.ChatId);
 			m.BotEngine = message.BotEngine;
 			m.BotKey = message.BotKey;
 			m.Message = message.Message;
-			context.SendMessage(m);
+
+			context.SendMessagesSequence(sp, m);
+
 			return Task.CompletedTask;
 		}
 	}

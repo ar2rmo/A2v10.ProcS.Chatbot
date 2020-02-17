@@ -11,14 +11,24 @@
 				"ChatId": "{{params.ChatId}}"
 			},
 			"Transitions": {
-				"WaitForMessage->End": {
-					"Description": "From WaitForMessage to End",
-					"To": "End"
+				"WaitForMessage->Hello": {
+					"Description": "From WaitForMessage to Hello",
+					"To": "Hello"
 				}
 			}
 		},
-		"End": {
-			"Description": "State End"
+		"Hello": {
+			"OnEntry": {
+				"$type": "A2v10.ProcS.Chatbot.SendMessage, A2v10.ProcS.Chatbot",
+				"BotEngine": "Telegram",
+				"BotKey": "TestBot",
+				"ChatId": "{{params.ChatId}}",
+				"Message": {
+					"Type": "Text",
+					"Text": "Preved!"
+				}
+			},
+			"NextState": "WaitForMessage"
 		}
 	}
 }
