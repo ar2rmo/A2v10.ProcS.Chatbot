@@ -8,7 +8,7 @@
 				"$type": "A2v10.ProcS.Chatbot.WaitMessage, A2v10.ProcS.Chatbot",
 				"BotEngine": "Telegram",
 				"BotKey": "TestBot",
-				"ChatId": "{{param.ChatId}}"
+				"ChatId": "{{params.ChatId}}"
 			},
 			"Transitions": {
 				"WaitForMessage->End": {

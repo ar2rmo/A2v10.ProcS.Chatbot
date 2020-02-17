@@ -31,6 +31,8 @@ namespace A2v10.ProcS.Chatbot
 
 		public InitBotChatMessage(BotEngine botEngine, String botKey) : base($"{botEngine}:{botKey.ToLowerInvariant()}")
 		{
+			BotEngine = botEngine;
+			BotKey = botKey;
 		}
 	}
 

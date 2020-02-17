@@ -29,7 +29,7 @@ namespace A2v10.ProcS.Chatbot
 		private BotEngine BotEngine { get; set; }
 		private String BotKey { get; set; }
 
-		internal WaitMessageSaga(BotManager botManager) : base(nameof(SendMessageSaga))
+		internal WaitMessageSaga(BotManager botManager) : base(nameof(WaitMessageSaga))
 		{
 			IsWaiting = false;
 			this.botManager = botManager;
