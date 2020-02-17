@@ -53,10 +53,11 @@ namespace A2v10.ProcS.Chatbot.Tests
 
 			mgr.LoadPlugins(pluginPath, configuration);
 
+			var taskManager = new SyncTaskManager();
 			var keeper = new InMemorySagaKeeper(mgr.Resolver);
 			var scriptEngine = new ScriptEngine();
 			var repository = new Repository(storage, storage);
-			var bus = new ServiceBus(keeper, repository, scriptEngine);
+			var bus = new ServiceBus(taskManager, keeper, repository, scriptEngine);
 			var engine = new WorkflowEngine(repository, bus, scriptEngine);
 			sp.Add(bus);
 			sp.Add(engine);
