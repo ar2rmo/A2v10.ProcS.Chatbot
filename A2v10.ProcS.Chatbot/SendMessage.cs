@@ -14,6 +14,7 @@ namespace A2v10.ProcS.Chatbot
 
 		public Task<ActionResult> Execute(IExecuteContext context)
 		{
+			Message.Text = context.Resolve(Message.Text);
 			var mess = new SendMessageMessage(Message);
 			mess.BotEngine = BotEngine;
 			mess.BotKey = BotKey;

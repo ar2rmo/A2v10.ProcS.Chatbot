@@ -1,9 +1,9 @@
-{
+﻿{
 	"$schema": "../../../A2v10.ProcS/@schemas/statemachine-schema.json",
 	"Description": "ChatBotExample",
-	"InitialState": "WaitForMessage",
+	"InitialState": "Init",
 	"States": {
-		"WaitForMessage": {
+		"Init": {
 			"OnEntry": {
 				"$type": "A2v10.ProcS.Chatbot.WaitMessage, A2v10.ProcS.Chatbot",
 				"BotEngine": "Telegram",
@@ -11,8 +11,41 @@
 				"ChatId": "{{params.ChatId}}"
 			},
 			"Transitions": {
-				"WaitForMessage->Hello": {
-					"Description": "From WaitForMessage to Hello",
+				"Init->AskName": {
+					"Condition": "result.Message.Text == '/start'",
+					"To": "AskName"
+				},
+				"Init->Init": {
+					"To": "Init"
+				}
+			}
+		},
+		"AskName": {
+			"OnEntry": {
+				"$type": "A2v10.ProcS.Chatbot.SendMessage, A2v10.ProcS.Chatbot",
+				"BotEngine": "Telegram",
+				"BotKey": "TestBot",
+				"ChatId": "{{params.ChatId}}",
+				"Message": {
+					"Type": "Text",
+					"Text": "Кто здесь?"
+				}
+			},
+			"NextState": "WaitForName"
+		},
+		"WaitForName": {
+			"OnEntry": {
+				"$type": "A2v10.ProcS.Chatbot.WaitMessage, A2v10.ProcS.Chatbot",
+				"BotEngine": "Telegram",
+				"BotKey": "TestBot",
+				"ChatId": "{{params.ChatId}}"
+			},
+			"OnExit": {
+				"$type": "A2v10.ProcS.CodeAction, A2v10.ProcS",
+				"Code": "data.name = result.Message.Text"
+			},
+			"Transitions": {
+				"WaitForName->Hello": {
 					"To": "Hello"
 				}
 			}
@@ -25,10 +58,57 @@
 				"ChatId": "{{params.ChatId}}",
 				"Message": {
 					"Type": "Text",
-					"Text": "Preved!"
+					"Text": "Превед, {{data.name}}!"
 				}
 			},
-			"NextState": "WaitForMessage"
+			"NextState": "HelloFather"
+		},
+		"HelloFather": {
+			"OnEntry": {
+				"$type": "A2v10.ProcS.Chatbot.SendMessage, A2v10.ProcS.Chatbot",
+				"BotEngine": "Telegram",
+				"BotKey": "TestBot",
+				"ChatId": "0c3af6d2-0000-0000-d2f6-3a0c00000000",
+				"Message": {
+					"Type": "Text",
+					"Text": "There is {{data.name}}"
+				}
+			},
+			"NextState": "Dialog"
+		},
+		"Dialog": {
+			"OnEntry": {
+				"$type": "A2v10.ProcS.Chatbot.WaitMessage, A2v10.ProcS.Chatbot",
+				"BotEngine": "Telegram",
+				"BotKey": "TestBot",
+				"ChatId": "{{params.ChatId}}"
+			},
+			"OnExit": {
+				"$type": "A2v10.ProcS.CodeAction, A2v10.ProcS",
+				"Code": "data.said = result.Message.Text"
+			},
+			"Transitions": {
+				"Dialog->AskName": {
+					"Condition": "result.Message.Text == '/start'",
+					"To": "AskName"
+				},
+				"Dialog->SayFather": {
+					"To": "SayFather"
+				}
+			}
+		},
+		"SayFather": {
+			"OnEntry": {
+				"$type": "A2v10.ProcS.Chatbot.SendMessage, A2v10.ProcS.Chatbot",
+				"BotEngine": "Telegram",
+				"BotKey": "TestBot",
+				"ChatId": "0c3af6d2-0000-0000-d2f6-3a0c00000000",
+				"Message": {
+					"Type": "Text",
+					"Text": "{{data.name}}: {{data.said}}"
+				}
+			},
+			"NextState": "Dialog"
 		}
 	}
 }
