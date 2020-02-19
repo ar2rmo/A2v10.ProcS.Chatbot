@@ -5,7 +5,7 @@ using BotCore;
 
 namespace A2v10.ProcS.Chatbot
 {
-	public class WaitMessage : IWorkflowAction
+	public class WaitMessage : IActivity
 	{
 		public WaitMessage()
 		{
@@ -16,16 +16,16 @@ namespace A2v10.ProcS.Chatbot
 		public String BotKey { get; set; }
 		public String ChatId { get; set; }
 
-		public async Task<ActionResult> Execute(IExecuteContext context)
+		public ActivityExecutionResult Execute(IExecuteContext context)
 		{
+			if (context.IsContinue) return ActivityExecutionResult.Complete;
 			var ch = Guid.Parse(context.Resolve(ChatId));
-			await context.SaveInstance();
 			var mess = new WaitMessageMessage(ch);
 			mess.ProcessId = context.Instance.Id;
 			mess.BotEngine = BotEngine;
 			mess.BotKey = BotKey;
 			context.SendMessage(mess);
-			return ActionResult.Idle;
+			return ActivityExecutionResult.Idle;
 		}
 	}
 

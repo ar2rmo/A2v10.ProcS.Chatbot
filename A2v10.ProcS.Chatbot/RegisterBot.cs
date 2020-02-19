@@ -8,18 +8,18 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace A2v10.ProcS.Chatbot
 {
-	public class RegisterBotProcessing : IWorkflowAction
+	public class RegisterBotProcessing : IActivity
 	{
 		public BotEngine BotEngine { get; set; }
 		public String BotKey { get; set; }
 		public String ChatProcessIdentity { get; set; }
 
-		public Task<ActionResult> Execute(IExecuteContext context)
+		public ActivityExecutionResult Execute(IExecuteContext context)
 		{
 			var mess = new RegisterBotProcessingMessage(BotEngine, BotKey);
 			mess.ChatProcessIdentity = ChatProcessIdentity;
 			context.SendMessage(mess);
-			return Task.FromResult(ActionResult.Success);
+			return ActivityExecutionResult.Complete;
 		}
 	}
 }

@@ -12,7 +12,7 @@
 			},
 			"Transitions": {
 				"Init->AskName": {
-					"Condition": "result.Message.Text == '/start'",
+					"Condition": "reply.Message.Text == '/start'",
 					"To": "AskName"
 				},
 				"Init->Init": {
@@ -41,8 +41,8 @@
 				"ChatId": "{{params.ChatId}}"
 			},
 			"OnExit": {
-				"$type": "A2v10.ProcS.CodeAction, A2v10.ProcS",
-				"Code": "data.name = result.Message.Text"
+				"$type": "A2v10.ProcS.CodeActivity, A2v10.ProcS",
+				"Code": "data.name = reply.Message.Text"
 			},
 			"Transitions": {
 				"WaitForName->Hello": {
@@ -84,12 +84,12 @@
 				"ChatId": "{{params.ChatId}}"
 			},
 			"OnExit": {
-				"$type": "A2v10.ProcS.CodeAction, A2v10.ProcS",
-				"Code": "data.said = result.Message.Text"
+				"$type": "A2v10.ProcS.CodeActivity, A2v10.ProcS",
+				"Code": "data.said = reply.Message.Text"
 			},
 			"Transitions": {
 				"Dialog->AskName": {
-					"Condition": "result.Message.Text == '/start'",
+					"Condition": "reply.Message.Text == '/start'",
 					"To": "AskName"
 				},
 				"Dialog->SayFather": {

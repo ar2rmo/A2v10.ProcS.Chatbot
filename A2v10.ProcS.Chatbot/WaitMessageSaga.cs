@@ -49,7 +49,7 @@ namespace A2v10.ProcS.Chatbot
 		{
 			if (IsWaiting)
 			{
-				var resumeProcess = new ResumeProcessMessage(ProcessId, DynamicObject.From(message));
+				var resumeProcess = new ContinueActivityMessage(ProcessId, String.Empty, DynamicObject.From(message));
 				context.SendMessage(resumeProcess);
 				IsComplete = true;
 			}

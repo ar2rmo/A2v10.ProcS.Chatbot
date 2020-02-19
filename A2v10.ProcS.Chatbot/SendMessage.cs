@@ -5,14 +5,14 @@ using BotCore;
 
 namespace A2v10.ProcS.Chatbot
 {
-	public class SendMessage : IWorkflowAction
+	public class SendMessage : IActivity
 	{
 		public BotEngine BotEngine { get; set; }
 		public String BotKey { get; set; }
 		public String ChatId { get; set; }
 		public OutgoingMessage Message { get; set; }
 
-		public Task<ActionResult> Execute(IExecuteContext context)
+		public ActivityExecutionResult Execute(IExecuteContext context)
 		{
 			Message.Text = context.Resolve(Message.Text);
 			var mess = new SendMessageMessage(Message);
@@ -20,7 +20,7 @@ namespace A2v10.ProcS.Chatbot
 			mess.BotKey = BotKey;
 			mess.ChatId = Guid.Parse(context.Resolve(ChatId));
 			context.SendMessage(mess);
-			return Task.FromResult(ActionResult.Success);
+			return ActivityExecutionResult.Complete;
 		}
 	}
 
