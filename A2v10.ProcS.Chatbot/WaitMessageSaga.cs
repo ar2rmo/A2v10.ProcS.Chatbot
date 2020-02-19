@@ -25,7 +25,7 @@ namespace A2v10.ProcS.Chatbot
 
 		
 		private Boolean IsWaiting { get; set; }
-		private Guid ProcessId { get; set; }
+		private Guid BookmarkId { get; set; }
 		private BotEngine BotEngine { get; set; }
 		private String BotKey { get; set; }
 
@@ -37,7 +37,7 @@ namespace A2v10.ProcS.Chatbot
 
 		protected override Task Handle(IHandleContext context, WaitMessageMessage message)
 		{
-			ProcessId = message.ProcessId;
+			BookmarkId = message.BookmarkId;
 			BotEngine = message.BotEngine;
 			BotKey = message.BotKey;
 			CorrelationId.Value = message.CorrelationId.Value;
@@ -49,8 +49,7 @@ namespace A2v10.ProcS.Chatbot
 		{
 			if (IsWaiting)
 			{
-				var resumeProcess = new ContinueActivityMessage(ProcessId, String.Empty, DynamicObject.From(message));
-				context.SendMessage(resumeProcess);
+				context.ResumeBookmark(BookmarkId, DynamicObject.From(message));
 				IsComplete = true;
 			}
 			else

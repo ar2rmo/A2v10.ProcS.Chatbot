@@ -19,9 +19,10 @@ namespace A2v10.ProcS.Chatbot
 		public ActivityExecutionResult Execute(IExecuteContext context)
 		{
 			if (context.IsContinue) return ActivityExecutionResult.Complete;
+			var book = context.SetBookmark();
 			var ch = Guid.Parse(context.Resolve(ChatId));
 			var mess = new WaitMessageMessage(ch);
-			mess.ProcessId = context.Instance.Id;
+			mess.BookmarkId = book;
 			mess.BotEngine = BotEngine;
 			mess.BotKey = BotKey;
 			context.SendMessage(mess);
@@ -31,7 +32,7 @@ namespace A2v10.ProcS.Chatbot
 
 	public class WaitMessageMessage : MessageBase<Guid>
 	{
-        public Guid ProcessId { get; set; }
+        public Guid BookmarkId { get; set; }
         public BotEngine BotEngine { get; set; }
 		public String BotKey { get; set; }
 
