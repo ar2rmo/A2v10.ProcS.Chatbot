@@ -57,14 +57,14 @@ namespace A2v10.ProcS.Chatbot.Tests
 			var keeper = new InMemorySagaKeeper(mgr.Resolver);
 			var scriptEngine = new ScriptEngine();
 			var repository = new Repository(storage, storage);
-			var bus = new ServiceBus(taskManager, keeper, repository, scriptEngine);
+			var bus = new InMemoryServiceBus(taskManager, keeper, repository, scriptEngine);
 			var engine = new WorkflowEngine(repository, bus, scriptEngine);
 			sp.Add(bus);
 			sp.Add(engine);
 
 			IInstance inst = await engine.StartWorkflow(new Identity("ChatBotExample.json"));
-			
-			await bus.Run(bus.CancelWhenEmpty.Token);
+
+			bus.Process();
 
 			Assert.AreEqual("End", inst.CurrentState);
 		}
