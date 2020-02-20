@@ -44,7 +44,7 @@ namespace A2v10.ProcS.Chatbot.Tests
 
 			var sp = new Services(epm);
 
-			var storage = new ProcS.Tests.FakeStorage("../../../workflows/");
+			var storage = new A2v10.ProcS.Tests.FakeStorage("../../../workflows/");
 			var rm = new ResourceManager(sp);
 
 			var mgr = new SagaManager(sp);
@@ -55,7 +55,10 @@ namespace A2v10.ProcS.Chatbot.Tests
 
 			var configuration = new ConfigurationBuilder().Build();
 
+			ProcS.RegisterSagas(rm, mgr);
+
 			pmr.LoadPlugins(pluginPath, configuration);
+
 
 			pmr.RegisterSagas(rm, mgr);
 
