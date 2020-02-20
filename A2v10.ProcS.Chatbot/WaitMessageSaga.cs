@@ -19,17 +19,26 @@ namespace A2v10.ProcS.Chatbot
 		}
 	}
 
-	public class WaitMessageSaga : SagaBaseDispatched<Guid, WaitMessageMessage, IncomeMessage>
+	internal interface IWaitMessageSagaStored
 	{
-		private BotManager botManager;
+		Boolean IsWaiting { get; set; }
+		Guid BookmarkId { get; set; }
+		BotEngine BotEngine { get; set; }
+		String BotKey { get; set; }
+	}
 
+	public class WaitMessageSaga : SagaBaseDispatched<Guid, WaitMessageMessage, IncomeMessage>, IWaitMessageSagaStored
+	{
+		public const string ukey = Plugin.Name + ":" + nameof(WaitMessageSaga);
 		
-		private Boolean IsWaiting { get; set; }
-		private Guid BookmarkId { get; set; }
-		private BotEngine BotEngine { get; set; }
-		private String BotKey { get; set; }
+		private BotManager botManager;
+		
+		public Boolean IsWaiting { get; set; }
+		public Guid BookmarkId { get; set; }
+		public BotEngine BotEngine { get; set; }
+		public String BotKey { get; set; }
 
-		internal WaitMessageSaga(BotManager botManager) : base(nameof(WaitMessageSaga))
+		internal WaitMessageSaga(BotManager botManager) : base(ukey)
 		{
 			IsWaiting = false;
 			this.botManager = botManager;
@@ -73,7 +82,7 @@ namespace A2v10.ProcS.Chatbot
 			this.botManager = botManager;
 		}
 
-		public string SagaKind => nameof(WaitMessageSaga);
+		public string SagaKind => WaitMessageSaga.ukey;
 
 		public ISaga CreateSaga()
 		{
@@ -90,10 +99,11 @@ namespace A2v10.ProcS.Chatbot
 			this.plugin = plugin;
 		}
 
-		public void Register(ISagaManager mgr)
+		public void Register(IResourceManager rmgr, ISagaManager smgr)
 		{
 			var factory = new WaitMessageSagaFactory(plugin.BotManager);
-			mgr.RegisterSagaFactory(factory, WaitMessageSaga.GetHandledTypes());
+			rmgr.RegisterResourceFactory(factory.SagaKind, new SagaResourceFactory(factory));
+			smgr.RegisterSagaFactory(factory, WaitMessageSaga.GetHandledTypes());
 		}
 	}
 }

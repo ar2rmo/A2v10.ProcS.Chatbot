@@ -60,7 +60,7 @@ namespace A2v10.ProcS.Chatbot
 		{
 			var sp = new StartProcessMessage(MasterProcessId);
 			sp.ProcessId = ChatProcessIdentity;
-			sp.Parameters = DynamicObject.From<InitBotChatMessage, IIncomingMessage>(message);
+			sp.Parameters = DynamicObject.From(message);
 
 			var m = new IncomeMessage(message.ChatId);
 			m.BotEngine = message.BotEngine;
@@ -99,10 +99,11 @@ namespace A2v10.ProcS.Chatbot
 			this.plugin = plugin;
 		}
 
-		public void Register(ISagaManager mgr)
+		public void Register(IResourceManager rmgr, ISagaManager smgr)
 		{
 			var factory = new RegisterBotSagaFactory(plugin.BotManager);
-			mgr.RegisterSagaFactory(factory, RegisterBotProcessingSaga.GetHandledTypes());
+			rmgr.RegisterResourceFactory(factory.SagaKind, new SagaResourceFactory(factory));
+			smgr.RegisterSagaFactory(factory, RegisterBotProcessingSaga.GetHandledTypes());
 		}
 	}
 }

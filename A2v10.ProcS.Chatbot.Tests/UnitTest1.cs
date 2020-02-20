@@ -45,13 +45,21 @@ namespace A2v10.ProcS.Chatbot.Tests
 			var sp = new Services(epm);
 
 			var storage = new ProcS.Tests.FakeStorage("../../../workflows/");
+			var rm = new ResourceManager(sp);
+
 			var mgr = new SagaManager(sp);
-			
+
+			var pmr = new PluginManager(sp);
+
 			String pluginPath = GetPluginPath();
 
 			var configuration = new ConfigurationBuilder().Build();
 
-			mgr.LoadPlugins(pluginPath, configuration);
+			pmr.LoadPlugins(pluginPath, configuration);
+
+			pmr.RegisterSagas(rm, mgr);
+
+			
 
 			var taskManager = new SyncTaskManager();
 			var keeper = new InMemorySagaKeeper(mgr.Resolver);
@@ -62,7 +70,9 @@ namespace A2v10.ProcS.Chatbot.Tests
 			sp.Add(bus);
 			sp.Add(engine);
 
-			IInstance inst = await engine.StartWorkflow(new Identity("ChatBotExample.json"));
+			var param = new DynamicObject();
+			param["ChatId"] = "0c3af6d2-0000-0000-d2f6-3a0c00000000";
+			IInstance inst = await engine.StartWorkflow(new Identity("ChatBotExample.json"), param);
 
 			bus.Process();
 

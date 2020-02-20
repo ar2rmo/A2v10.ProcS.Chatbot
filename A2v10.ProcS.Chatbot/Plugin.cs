@@ -9,6 +9,8 @@ namespace A2v10.ProcS.Chatbot
 {
     public class Plugin : IPlugin
     {
+        public const string Name = "com.a2.procs.chatbot";
+
         internal BotManager BotManager { get; private set; }
 
         public void Init(IServiceProvider provider, IConfiguration configuration)

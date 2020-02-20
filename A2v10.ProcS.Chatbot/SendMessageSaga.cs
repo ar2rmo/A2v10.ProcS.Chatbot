@@ -8,9 +8,11 @@ namespace A2v10.ProcS.Chatbot
 {
 	public class SendMessageSaga : SagaBaseDispatched<Guid, SendMessageMessage>
 	{
+		public const string ukey = Plugin.Name + ":" + nameof(SendMessageSaga);
+
 		private BotManager botManager;
 
-		internal SendMessageSaga(BotManager botManager) : base(nameof(SendMessageSaga))
+		internal SendMessageSaga(BotManager botManager) : base(ukey)
 		{
 			this.botManager = botManager;
 		}
@@ -31,7 +33,7 @@ namespace A2v10.ProcS.Chatbot
 			this.botManager = botManager;
 		}
 
-		public string SagaKind => nameof(SendMessageSaga);
+		public string SagaKind => SendMessageSaga.ukey;
 
 		public ISaga CreateSaga()
 		{
@@ -48,10 +50,11 @@ namespace A2v10.ProcS.Chatbot
 			this.plugin = plugin;
 		}
 
-		public void Register(ISagaManager mgr)
+		public void Register(IResourceManager rmgr, ISagaManager smgr)
 		{
 			var factory = new SendMessageSagaFactory(plugin.BotManager);
-			mgr.RegisterSagaFactory(factory, SendMessageSaga.GetHandledTypes());
+			rmgr.RegisterResourceFactory(factory.SagaKind, new SagaResourceFactory(factory));
+			smgr.RegisterSagaFactory(factory, SendMessageSaga.GetHandledTypes());
 		}
 	}
 }
