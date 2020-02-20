@@ -14,6 +14,7 @@ namespace A2v10.ProcS.Chatbot
 		public String BotKey { get; set; }
         public IIncomingMessage Message { get; set; }
 
+        [RestoreWith]
 		public IncomeMessage(Guid chatId) : base(chatId)
 		{
 		}

@@ -31,6 +31,11 @@ namespace A2v10.ProcS.Chatbot
 		public Guid ChatId { get; set; }
 		public OutgoingMessage Message { get; set; }
 
+        [RestoreWith]
+        public SendMessageMessage(Guid correlationId) : base(correlationId)
+        {
+
+        }
 		public SendMessageMessage(OutgoingMessage message) : base(Guid.NewGuid())
 		{
 			Message = message;

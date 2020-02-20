@@ -36,6 +36,7 @@ namespace A2v10.ProcS.Chatbot
         public BotEngine BotEngine { get; set; }
 		public String BotKey { get; set; }
 
+        [RestoreWith]
 		public WaitMessageMessage(Guid chatId) : base(chatId)
 		{
 		}

@@ -56,11 +56,12 @@ namespace A2v10.ProcS.Chatbot.Tests
 			var configuration = new ConfigurationBuilder().Build();
 
 			ProcS.RegisterSagas(rm, mgr);
+			ProcS.RegisterActivities(rm);
 
 			pmr.LoadPlugins(pluginPath, configuration);
 
 
-			pmr.RegisterSagas(rm, mgr);
+			pmr.RegisterResources(rm, mgr);
 
 			
 
