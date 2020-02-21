@@ -8,7 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace A2v10.ProcS.Chatbot
 {
-	public class RegisterBotProcessing : IActivity
+	[ResourceKey(Plugin.Name + ":" + nameof(RegisterBotProcessingActivity))]
+	public class RegisterBotProcessingActivity : IActivity
 	{
 		public BotEngine BotEngine { get; set; }
 		public String BotKey { get; set; }

@@ -5,7 +5,9 @@ using BotCore;
 
 namespace A2v10.ProcS.Chatbot
 {
-	public class SendMessage : IActivity
+
+	[ResourceKey(Plugin.Name + ":" + nameof(SendMessageActivity))]
+	public class SendMessageActivity : IActivity
 	{
 		public BotEngine BotEngine { get; set; }
 		public String BotKey { get; set; }
@@ -24,8 +26,10 @@ namespace A2v10.ProcS.Chatbot
 		}
 	}
 
+	[ResourceKey(ukey)]
 	public class SendMessageMessage : MessageBase<Guid>
 	{
+		public const string ukey = Plugin.Name + ":" + nameof(SendMessageMessage);
 		public BotEngine BotEngine { get; set; }
 		public String BotKey { get; set; }
 		public Guid ChatId { get; set; }

@@ -11,6 +11,7 @@ namespace A2v10.ProcS.Chatbot
 {
 	public enum BotEngine
 	{
+		Mocking,
 		Telegram,
 		Viber
 	}
@@ -23,9 +24,11 @@ namespace A2v10.ProcS.Chatbot
 		public BotManager(Microsoft.Extensions.Configuration.IConfiguration configuration)
 		{
 			factories = new Dictionary<BotEngine, IBotFactory>();
+			factories.Add(BotEngine.Mocking, new MockingBotFactory());
 			factories.Add(BotEngine.Telegram, new TelegramBotFactory(configuration.GetSection("Telegram")));
 
 			bots = new Dictionary<BotEngine, ConcurrentDictionary<String, BotWrapper>>();
+			bots.Add(BotEngine.Mocking, new ConcurrentDictionary<String, BotWrapper>(StringComparer.InvariantCultureIgnoreCase));
 			bots.Add(BotEngine.Telegram, new ConcurrentDictionary<String, BotWrapper>(StringComparer.InvariantCultureIgnoreCase));
 		}
 
@@ -103,6 +106,14 @@ namespace A2v10.ProcS.Chatbot
 			cfg.Token = cs["Token"];
 			cfg.WebHook = cs["WebHookUri"];
 			return new BotCore.Telegram.TelegramBot(cfg);
+		}
+	}
+
+	internal class MockingBotFactory : IBotFactory
+	{
+		public IBot CreateBot(String key)
+		{
+			return new MockingBot();
 		}
 	}
 

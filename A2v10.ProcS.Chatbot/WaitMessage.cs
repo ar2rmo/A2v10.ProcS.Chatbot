@@ -5,9 +5,10 @@ using BotCore;
 
 namespace A2v10.ProcS.Chatbot
 {
-	public class WaitMessage : IActivity
+	[ResourceKey(Plugin.Name + ":" + nameof(WaitMessageActivity))]
+	public class WaitMessageActivity : IActivity
 	{
-		public WaitMessage()
+		public WaitMessageActivity()
 		{
 
 		}
@@ -30,9 +31,11 @@ namespace A2v10.ProcS.Chatbot
 		}
 	}
 
+	[ResourceKey(ukey)]
 	public class WaitMessageMessage : MessageBase<Guid>
 	{
-        public Guid BookmarkId { get; set; }
+		public const string ukey = Plugin.Name + ":" + nameof(WaitMessageMessage);
+		public Guid BookmarkId { get; set; }
         public BotEngine BotEngine { get; set; }
 		public String BotKey { get; set; }
 

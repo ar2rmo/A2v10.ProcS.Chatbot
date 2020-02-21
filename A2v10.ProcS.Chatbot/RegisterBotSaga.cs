@@ -8,8 +8,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace A2v10.ProcS.Chatbot
 {
+	[ResourceKey(ukey)]
 	public class RegisterBotProcessingMessage : MessageBase<String>
 	{
+		public const string ukey = Plugin.Name + ":" + nameof(RegisterBotProcessingMessage);
 		public Guid MasterProcessId { get; set; }
 		public BotEngine BotEngine { get; set; }
 		public String BotKey { get; set; }
@@ -23,8 +25,10 @@ namespace A2v10.ProcS.Chatbot
 		}
 	}
 
+	[ResourceKey(ukey)]
 	public class InitBotChatMessage : MessageBase<String>
 	{
+		public const string ukey = Plugin.Name + ":" + nameof(InitBotChatMessage);
 		public BotEngine BotEngine { get; set; }
 		public String BotKey { get; set; }
 		public Guid ChatId { get; set; }
@@ -40,12 +44,14 @@ namespace A2v10.ProcS.Chatbot
 
 	public class RegisterBotProcessingSaga : SagaBaseDispatched<String, RegisterBotProcessingMessage, InitBotChatMessage>
 	{
+		public const string ukey = Plugin.Name + ":" + nameof(RegisterCallbackSaga);
+
 		private BotManager botManager;
 
 		private Guid MasterProcessId { get; set; }
 		private String ChatProcessIdentity { get; set; }
 
-		internal RegisterBotProcessingSaga(BotManager botManager) : base(nameof(RegisterBotProcessingSaga))
+		internal RegisterBotProcessingSaga(BotManager botManager) : base(ukey)
 		{
 			this.botManager = botManager;
 		}
@@ -62,7 +68,7 @@ namespace A2v10.ProcS.Chatbot
 		{
 			var sp = new StartProcessMessage(MasterProcessId);
 			sp.ProcessId = ChatProcessIdentity;
-			sp.Parameters = DynamicObject.From(message);
+			sp.Parameters = DynamicObjectConverters.From(message);
 
 			var m = new IncomeMessage(message.ChatId);
 			m.BotEngine = message.BotEngine;
@@ -84,7 +90,7 @@ namespace A2v10.ProcS.Chatbot
 			this.botManager = botManager;
 		}
 
-		public string SagaKind => nameof(RegisterBotProcessingSaga);
+		public string SagaKind => RegisterBotProcessingSaga.ukey;
 
 		public ISaga CreateSaga()
 		{
@@ -105,6 +111,7 @@ namespace A2v10.ProcS.Chatbot
 		{
 			var factory = new RegisterBotSagaFactory(plugin.BotManager);
 			rmgr.RegisterResourceFactory(factory.SagaKind, new SagaResourceFactory(factory));
+			rmgr.RegisterResources(RegisterBotProcessingSaga.GetHandledTypes());
 			smgr.RegisterSagaFactory(factory, RegisterBotProcessingSaga.GetHandledTypes());
 		}
 	}

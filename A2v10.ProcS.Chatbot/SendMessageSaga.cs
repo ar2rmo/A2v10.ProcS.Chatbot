@@ -54,6 +54,7 @@ namespace A2v10.ProcS.Chatbot
 		{
 			var factory = new SendMessageSagaFactory(plugin.BotManager);
 			rmgr.RegisterResourceFactory(factory.SagaKind, new SagaResourceFactory(factory));
+			rmgr.RegisterResources(SendMessageSaga.GetHandledTypes());
 			smgr.RegisterSagaFactory(factory, SendMessageSaga.GetHandledTypes());
 		}
 	}

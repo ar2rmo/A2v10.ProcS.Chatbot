@@ -6,7 +6,7 @@
 		"Init": {
 			"OnEntry": {
 				"$type": "A2v10.ProcS.Chatbot.WaitMessageActivity, A2v10.ProcS.Chatbot",
-				"BotEngine": "Telegram",
+				"BotEngine": "Mocking",
 				"BotKey": "TestBot",
 				"ChatId": "{{params.ChatId}}"
 			},
@@ -23,7 +23,7 @@
 		"AskName": {
 			"OnEntry": {
 				"$type": "A2v10.ProcS.Chatbot.SendMessageActivity, A2v10.ProcS.Chatbot",
-				"BotEngine": "Telegram",
+				"BotEngine": "Mocking",
 				"BotKey": "TestBot",
 				"ChatId": "{{params.ChatId}}",
 				"Message": {
@@ -36,7 +36,7 @@
 		"WaitForName": {
 			"OnEntry": {
 				"$type": "A2v10.ProcS.Chatbot.WaitMessageActivity, A2v10.ProcS.Chatbot",
-				"BotEngine": "Telegram",
+				"BotEngine": "Mocking",
 				"BotKey": "TestBot",
 				"ChatId": "{{params.ChatId}}"
 			},
@@ -53,7 +53,7 @@
 		"Hello": {
 			"OnEntry": {
 				"$type": "A2v10.ProcS.Chatbot.SendMessageActivity, A2v10.ProcS.Chatbot",
-				"BotEngine": "Telegram",
+				"BotEngine": "Mocking",
 				"BotKey": "TestBot",
 				"ChatId": "{{params.ChatId}}",
 				"Message": {
@@ -66,7 +66,7 @@
 		"HelloFather": {
 			"OnEntry": {
 				"$type": "A2v10.ProcS.Chatbot.SendMessageActivity, A2v10.ProcS.Chatbot",
-				"BotEngine": "Telegram",
+				"BotEngine": "Mocking",
 				"BotKey": "TestBot",
 				"ChatId": "0c3af6d2-0000-0000-d2f6-3a0c00000000",
 				"Message": {
@@ -79,7 +79,7 @@
 		"Dialog": {
 			"OnEntry": {
 				"$type": "A2v10.ProcS.Chatbot.WaitMessageActivity, A2v10.ProcS.Chatbot",
-				"BotEngine": "Telegram",
+				"BotEngine": "Mocking",
 				"BotKey": "TestBot",
 				"ChatId": "{{params.ChatId}}"
 			},
@@ -100,7 +100,7 @@
 		"SayFather": {
 			"OnEntry": {
 				"$type": "A2v10.ProcS.Chatbot.SendMessageActivity, A2v10.ProcS.Chatbot",
-				"BotEngine": "Telegram",
+				"BotEngine": "Mocking",
 				"BotKey": "TestBot",
 				"ChatId": "0c3af6d2-0000-0000-d2f6-3a0c00000000",
 				"Message": {

@@ -1,9 +1,10 @@
-﻿using A2v10.ProcS.Infrastructure;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Threading.Tasks;
+using A2v10.ProcS.Infrastructure;
 
-[assembly: ProcSPlugin(typeof(A2v10.ProcS.Chatbot.Plugin))]
+[assembly: ProcSPlugin(A2v10.ProcS.Chatbot.Plugin.Name, typeof(A2v10.ProcS.Chatbot.Plugin))]
 
 namespace A2v10.ProcS.Chatbot
 {
@@ -21,6 +22,11 @@ namespace A2v10.ProcS.Chatbot
             var bus = provider.GetService<IServiceBus>();
 
             epm.RegisterEndpoint("telegram", new EndpointHandlerFactory(bus, BotEngine.Telegram, BotManager));
+        }
+
+        public async Task<BotCore.IBot> GetBotAsync(BotEngine engine, String key)
+        {
+            return await BotManager.GetBotAsync(engine, key);
         }
     }
 }

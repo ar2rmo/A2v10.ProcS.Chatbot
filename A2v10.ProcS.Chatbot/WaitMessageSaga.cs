@@ -8,8 +8,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace A2v10.ProcS.Chatbot
 {
+	[ResourceKey(ukey)]
 	public class IncomeMessage : MessageBase<Guid>
 	{
+		public const string ukey = Plugin.Name + ":" + nameof(IncomeMessage);
 		public BotEngine BotEngine { get; set; }
 		public String BotKey { get; set; }
         public IIncomingMessage Message { get; set; }
@@ -18,6 +20,29 @@ namespace A2v10.ProcS.Chatbot
 		public IncomeMessage(Guid chatId) : base(chatId)
 		{
 		}
+
+		public override void Store(IDynamicObject storage)
+		{
+			storage.Set("botEngine", BotEngine.ToString());
+			storage.Set("botKey", BotKey);
+			storage.Set("message", DynamicObjectConverters.From(Message));
+		}
+
+		public override void Restore(IDynamicObject storage)
+		{
+			if (!Enum.TryParse<BotEngine>(storage.Get<String>("botEngine"), out var botEngine)) throw new Exception("Cannot restore IncomeMessage. Wrong BotEngine.");
+			BotEngine = botEngine;
+			BotKey = storage.Get<String>("botKey");
+			Message = storage.GetDynamicObject("message").To<RestoredIncomingMessage>();
+		}
+	}
+
+	internal class RestoredIncomingMessage : IIncomingMessage
+	{
+		public String Text { get; set; }
+		public BotCore.Types.Enums.MessageInType Type { get; set; }
+		public User User { get; set; }
+		public Location Location { get; set; }
 	}
 
 	internal interface IWaitMessageSagaStored
@@ -59,7 +84,7 @@ namespace A2v10.ProcS.Chatbot
 		{
 			if (IsWaiting)
 			{
-				context.ResumeBookmark(BookmarkId, DynamicObject.From(message));
+				context.ResumeBookmark(BookmarkId, DynamicObjectConverters.From(message));
 				IsComplete = true;
 			}
 			else
@@ -104,6 +129,7 @@ namespace A2v10.ProcS.Chatbot
 		{
 			var factory = new WaitMessageSagaFactory(plugin.BotManager);
 			rmgr.RegisterResourceFactory(factory.SagaKind, new SagaResourceFactory(factory));
+			rmgr.RegisterResources(WaitMessageSaga.GetHandledTypes());
 			smgr.RegisterSagaFactory(factory, WaitMessageSaga.GetHandledTypes());
 		}
 	}
