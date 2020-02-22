@@ -68,7 +68,7 @@ namespace A2v10.ProcS.Chatbot.Tests
 			var keeper = new InMemorySagaKeeper(mgr.Resolver);
 			var scriptEngine = new ScriptEngine();
 			var repository = new Repository(storage, storage);
-			var bus = new InMemoryServiceBus(taskManager, keeper, repository, scriptEngine);
+			var bus = new ServiceBus(taskManager, keeper, repository, scriptEngine);
 			var engine = new WorkflowEngine(repository, bus, scriptEngine);
 			sp.Add(bus);
 			sp.Add(engine);
@@ -77,7 +77,7 @@ namespace A2v10.ProcS.Chatbot.Tests
 			param["ChatId"] = "0c3af6d2-0000-0000-d2f6-3a0c00000000";
 			IInstance inst = await engine.StartWorkflow(new Identity("ChatBotTest.json"), param);
 
-			bus.Process();
+			await bus.Process();
 
 			var plug = pmr.GetPlugin<Plugin>(Plugin.Name);
 			var bot = await plug.GetBotAsync(BotEngine.Mocking, "TestBot");
@@ -87,7 +87,7 @@ namespace A2v10.ProcS.Chatbot.Tests
 			var m1 = rm.Unwrap<IMessage>(m1do);
 			bus.Send(m1);
 
-			bus.Process();
+			await bus.Process();
 
 			var ni = await repository.Get(inst.Id);
 
