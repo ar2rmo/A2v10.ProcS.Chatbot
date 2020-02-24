@@ -17,7 +17,7 @@ namespace A2v10.ProcS.Chatbot
 		public String BotKey { get; set; }
 		public String ChatProcessIdentity { get; set; }
 
-        [RestoreWith]
+		[RestoreWith]
 		public RegisterBotProcessingMessage(BotEngine botEngine, String botKey) : base($"{botEngine}:{botKey.ToLowerInvariant()}")
 		{
 			BotEngine = botEngine;
@@ -34,7 +34,7 @@ namespace A2v10.ProcS.Chatbot
 		public Guid ChatId { get; set; }
 		public IIncomingMessage Message { get; set; }
 
-        [RestoreWith]
+		[RestoreWith]
 		public InitBotChatMessage(BotEngine botEngine, String botKey) : base($"{botEngine}:{botKey.ToLowerInvariant()}")
 		{
 			BotEngine = botEngine;

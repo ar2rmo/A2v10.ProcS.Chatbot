@@ -8,25 +8,25 @@ using A2v10.ProcS.Infrastructure;
 
 namespace A2v10.ProcS.Chatbot
 {
-    public class Plugin : IPlugin
-    {
-        public const string Name = "com.a2.procs.chatbot";
+	public class Plugin : IPlugin
+	{
+		public const string Name = "com.a2.procs.chatbot";
 
-        internal BotManager BotManager { get; private set; }
+		internal BotManager BotManager { get; private set; }
 
-        public void Init(IServiceProvider provider, IConfiguration configuration)
-        {
-            BotManager = new BotManager(configuration.GetSection("ChatBots"));
+		public void Init(IServiceProvider provider, IConfiguration configuration)
+		{
+			BotManager = new BotManager(configuration.GetSection("ChatBots"));
 
-            var epm = provider.GetService<IEndpointManager>();
-            var bus = provider.GetService<IServiceBus>();
+			var epm = provider.GetService<IEndpointManager>();
+			var bus = provider.GetService<IServiceBus>();
 
-            epm.RegisterEndpoint("telegram", new EndpointHandlerFactory(bus, BotEngine.Telegram, BotManager));
-        }
+			epm.RegisterEndpoint("telegram", new EndpointHandlerFactory(bus, BotEngine.Telegram, BotManager));
+		}
 
-        public async Task<BotCore.IBot> GetBotAsync(BotEngine engine, String key)
-        {
-            return await BotManager.GetBotAsync(engine, key);
-        }
-    }
+		public async Task<BotCore.IBot> GetBotAsync(BotEngine engine, String key)
+		{
+			return await BotManager.GetBotAsync(engine, key);
+		}
+	}
 }

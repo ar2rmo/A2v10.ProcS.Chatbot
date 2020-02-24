@@ -14,9 +14,9 @@ namespace A2v10.ProcS.Chatbot
 		public const string ukey = Plugin.Name + ":" + nameof(IncomeMessage);
 		public BotEngine BotEngine { get; set; }
 		public String BotKey { get; set; }
-        public IIncomingMessage Message { get; set; }
+		public IIncomingMessage Message { get; set; }
 
-        [RestoreWith]
+		[RestoreWith]
 		public IncomeMessage(Guid chatId) : base(chatId)
 		{
 		}

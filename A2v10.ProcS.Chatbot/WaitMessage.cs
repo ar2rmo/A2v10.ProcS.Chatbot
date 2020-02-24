@@ -36,10 +36,10 @@ namespace A2v10.ProcS.Chatbot
 	{
 		public const string ukey = Plugin.Name + ":" + nameof(WaitMessageMessage);
 		public Guid BookmarkId { get; set; }
-        public BotEngine BotEngine { get; set; }
+		public BotEngine BotEngine { get; set; }
 		public String BotKey { get; set; }
 
-        [RestoreWith]
+		[RestoreWith]
 		public WaitMessageMessage(Guid chatId) : base(chatId)
 		{
 		}

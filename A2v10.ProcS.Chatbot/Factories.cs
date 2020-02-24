@@ -159,21 +159,21 @@ namespace A2v10.ProcS.Chatbot
 		}
 	}
 
-    internal class MessageProcessor : IMessageProcessor
-    {
+	internal class MessageProcessor : IMessageProcessor
+	{
 		private readonly BotEngine engine;
 		private readonly String key;
 		private readonly IServiceBus bus;
 
 		public MessageProcessor(IServiceBus bus, BotEngine engine, String key)
-        {
+		{
 			this.bus = bus;
-            this.engine = engine;
+			this.engine = engine;
 			this.key = key;
 		}
 
 		public IEnumerable<IOutgoingMessage> ProcessIncomingMessage(IChatSession sess, IIncomingMessage msg)
-        {
+		{
 			var m = new IncomeMessage(sess.ChatId);
 			m.BotEngine = engine;
 			m.BotKey = key;
@@ -181,7 +181,7 @@ namespace A2v10.ProcS.Chatbot
 			bus.Send(m);
 			yield break;
 		}
-    }
+	}
 
 	internal class ChatSession : IChatSession
 	{

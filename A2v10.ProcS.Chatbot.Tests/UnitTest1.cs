@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace A2v10.ProcS.Chatbot.Tests
 {
-    [TestClass]
-    public class ChatbotTest1
-    {
+	[TestClass]
+	public class ChatbotTest1
+	{
 		public class Services : IServiceProvider
 		{
 			private List<Object> services;
@@ -22,8 +22,8 @@ namespace A2v10.ProcS.Chatbot.Tests
 				services = new List<object>(svcs);
 			}
 
-            public void Add(Object obj)
-            {
+			public void Add(Object obj)
+			{
 				services.Add(obj);
 			}
 
@@ -38,8 +38,8 @@ namespace A2v10.ProcS.Chatbot.Tests
 		}
 
 		[TestMethod]
-        public async Task RunWorkflow()
-        {
+		public async Task RunWorkflow()
+		{
 			var epm = new EndpointManager();
 
 			var sp = new Services(epm);
