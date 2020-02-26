@@ -44,8 +44,9 @@ namespace A2v10.ProcS.Chatbot.Tests
 
 			var sp = new Services(epm);
 
-			var storage = new A2v10.ProcS.Tests.FakeStorage("../../../workflows/");
 			var rm = new ResourceManager(sp);
+
+			var storage = new A2v10.ProcS.Tests.FakeStorage(rm, "../../../workflows/");
 
 			var mgr = new SagaManager(sp);
 
