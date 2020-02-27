@@ -66,7 +66,8 @@ namespace A2v10.ProcS.Chatbot
 
 		protected override Task Handle(IHandleContext context, InitBotChatMessage message)
 		{
-			var sp = new StartProcessMessage(MasterProcessId);
+			var sp = new StartProcessMessage();
+			sp.ParentId = MasterProcessId;
 			sp.ProcessId = ChatProcessIdentity;
 			sp.Parameters = DynamicObjectConverters.From(message);
 
