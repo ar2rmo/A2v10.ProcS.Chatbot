@@ -44,5 +44,22 @@ namespace A2v10.ProcS.Chatbot
 		{
 			Message = message;
 		}
+
+		public override void Store(IDynamicObject storage, IResourceWrapper wrapper)
+		{
+			storage.Set("correlationId", CorrelationId.Value);
+			storage.Set("botEngine", BotEngine.ToString());
+			storage.Set("botKey", BotKey);
+			storage.Set("chatId", ChatId);
+			storage.Set("message", DynamicObjectConverters.From(Message));
+		}
+
+		public override void Restore(IDynamicObject store, IResourceWrapper wrapper)
+		{
+			BotEngine = store.Get<BotEngine>("botEngine");
+			BotKey = store.Get<String>("botKey");
+			ChatId = store.Get<Guid>("chatId");
+			Message = store.GetDynamicObject("message").To<OutgoingMessage>();
+		}
 	}
 }

@@ -57,8 +57,10 @@ namespace A2v10.ProcS.Chatbot.Tests
 
 			var impl = new Dictionary<Type, Type>();
 			impl.Add(typeof(BotCore.IIncomingMessage), typeof(BotIncMess));
+			impl.Add(typeof(BotCore.IKeyboard), null);
+			//impl.Add(typeof(BotCore.IButton), typeof(Button));
 
-			BaseClass.TestRegistred(rm, frm.TheList.Where(itm => itm.Key == IncomeMessage.ukey), impl);
+			BaseClass.TestRegistred(rm, frm.TheList, impl);
 		}
 	}
 

@@ -23,6 +23,20 @@ namespace A2v10.ProcS.Chatbot
 			BotEngine = botEngine;
 			BotKey = botKey;
 		}
+
+		public override void Store(IDynamicObject storage, IResourceWrapper wrapper)
+		{
+			storage.Set("botEngine", BotEngine.ToString());
+			storage.Set("botKey", BotKey);
+			storage.Set("masterProcessId", MasterProcessId);
+			storage.Set("chatProcessIdentity", ChatProcessIdentity);
+		}
+
+		public override void Restore(IDynamicObject store, IResourceWrapper wrapper)
+		{
+			MasterProcessId = store.Get<Guid>("masterProcessId");
+			ChatProcessIdentity = store.Get<String>("chatProcessIdentity");
+		}
 	}
 
 	[ResourceKey(ukey)]
@@ -40,16 +54,44 @@ namespace A2v10.ProcS.Chatbot
 			BotEngine = botEngine;
 			BotKey = botKey;
 		}
+
+		public override void Store(IDynamicObject storage, IResourceWrapper wrapper)
+		{
+			storage.Set("botEngine", BotEngine.ToString());
+			storage.Set("botKey", BotKey);
+			storage.Set("chatId", ChatId);
+			storage.Set("message", DynamicObjectConverters.From(Message));
+		}
+
+		public override void Restore(IDynamicObject store, IResourceWrapper wrapper)
+		{
+			ChatId = store.Get<Guid>("chatId");
+			Message = store.GetDynamicObject("message").To<RestoredIncomingMessage>();
+		}
 	}
 
 	public class RegisterBotProcessingSaga : SagaBaseDispatched<String, RegisterBotProcessingMessage, InitBotChatMessage>
 	{
 		public const string ukey = Plugin.Name + ":" + nameof(RegisterCallbackSaga);
 
-		private BotManager botManager;
+		private readonly BotManager botManager;
 
 		private Guid MasterProcessId { get; set; }
 		private String ChatProcessIdentity { get; set; }
+
+		public override IDynamicObject Store(IResourceWrapper wrapper)
+		{
+			var store = new DynamicObject();
+			store.Set("masterProcessId", MasterProcessId);
+			store.Set("chatProcessIdentity", ChatProcessIdentity);
+			return store;
+		}
+
+		public override void Restore(IDynamicObject store, IResourceWrapper wrapper)
+		{
+			MasterProcessId = store.Get<Guid>("masterProcessId");
+			ChatProcessIdentity = store.Get<String>("chatProcessIdentity");
+		}
 
 		internal RegisterBotProcessingSaga(BotManager botManager) : base(ukey)
 		{

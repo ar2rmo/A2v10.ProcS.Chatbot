@@ -43,5 +43,20 @@ namespace A2v10.ProcS.Chatbot
 		public WaitMessageMessage(Guid chatId) : base(chatId)
 		{
 		}
+
+		public override void Store(IDynamicObject storage, IResourceWrapper wrapper)
+		{
+			storage.Set("chatId", CorrelationId.Value);
+			storage.Set("bookmarkId", BookmarkId);
+			storage.Set("botEngine", BotEngine.ToString());
+			storage.Set("botKey", BotKey);
+		}
+
+		public override void Restore(IDynamicObject store, IResourceWrapper wrapper)
+		{
+			BookmarkId = store.Get<Guid>("bookmarkId");
+			BotEngine = store.Get<BotEngine>("botEngine");
+			BotKey = store.Get<String>("botKey");
+		}
 	}
 }

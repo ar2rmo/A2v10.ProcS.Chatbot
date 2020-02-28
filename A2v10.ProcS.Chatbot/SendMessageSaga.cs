@@ -10,7 +10,18 @@ namespace A2v10.ProcS.Chatbot
 	{
 		public const string ukey = Plugin.Name + ":" + nameof(SendMessageSaga);
 
-		private BotManager botManager;
+		private readonly BotManager botManager;
+
+		public override IDynamicObject Store(IResourceWrapper wrapper)
+		{
+			var store = new DynamicObject();
+			return store;
+		}
+
+		public override void Restore(IDynamicObject store, IResourceWrapper wrapper)
+		{
+			
+		}
 
 		internal SendMessageSaga(BotManager botManager) : base(ukey)
 		{

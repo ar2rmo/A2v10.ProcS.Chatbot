@@ -57,12 +57,30 @@ namespace A2v10.ProcS.Chatbot
 	{
 		public const string ukey = Plugin.Name + ":" + nameof(WaitMessageSaga);
 		
-		private BotManager botManager;
+		private readonly BotManager botManager;
 		
 		public Boolean IsWaiting { get; set; }
 		public Guid BookmarkId { get; set; }
 		public BotEngine BotEngine { get; set; }
 		public String BotKey { get; set; }
+
+		public override IDynamicObject Store(IResourceWrapper wrapper)
+		{
+			var store = new DynamicObject();
+			store.Set("isWaiting", IsWaiting);
+			store.Set("bookmarkId", BookmarkId);
+			store.Set("botEngine", BotEngine);
+			store.Set("botKey", BotKey);
+			return store;
+		}
+
+		public override void Restore(IDynamicObject store, IResourceWrapper wrapper)
+		{
+			IsWaiting = store.Get<Boolean>("isWaiting");
+			BookmarkId = store.Get<Guid>("bookmarkId");
+			BotEngine = store.Get<BotEngine>("botEngine");
+			BotKey = store.Get<String>("botKey");
+		}
 
 		internal WaitMessageSaga(BotManager botManager) : base(ukey)
 		{
