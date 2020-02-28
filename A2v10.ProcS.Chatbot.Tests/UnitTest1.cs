@@ -13,30 +13,6 @@ namespace A2v10.ProcS.Chatbot.Tests
 	[TestClass]
 	public class ChatbotTest1
 	{
-		public class Services : IServiceProvider
-		{
-			private List<Object> services;
-
-			public Services(params Object[] svcs)
-			{
-				services = new List<object>(svcs);
-			}
-
-			public void Add(Object obj)
-			{
-				services.Add(obj);
-			}
-
-			public object GetService(Type serviceType)
-			{
-				foreach (var s in services)
-				{
-					if (serviceType.IsAssignableFrom(s.GetType())) return s;
-				}
-				return null;
-			}
-		}
-
 		[TestMethod]
 		public async Task RunWorkflow()
 		{
@@ -52,7 +28,7 @@ namespace A2v10.ProcS.Chatbot.Tests
 
 			var pmr = new PluginManager(sp);
 
-			String pluginPath = GetPluginPath();
+			String pluginPath = ChatbotTests.GetPluginPath();
 
 			var configuration = new ConfigurationBuilder().Build();
 
@@ -93,19 +69,6 @@ namespace A2v10.ProcS.Chatbot.Tests
 			var ni = await repository.Get(inst.Id);
 
 			Assert.AreEqual("WaitForName", ni.CurrentState);
-		}
-
-		static String GetPluginPath()
-		{
-			var path = new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath;
-			var pathes = path.Split(Path.DirectorySeparatorChar);
-			var debugRelease = pathes[^3];
-			var newPathes = pathes.Take(pathes.Length - 5).ToList();
-			newPathes.Add($"A2v10.ProcS.Chatbot");
-			newPathes.Add($"bin");
-			newPathes.Add(debugRelease);
-			newPathes.Add("netstandard2.0");
-			return (newPathes[0] == "" ? new string(new char[] { Path.DirectorySeparatorChar }) : "") + Path.Combine(newPathes.ToArray());
 		}
 
 		private const string msg1 = @"

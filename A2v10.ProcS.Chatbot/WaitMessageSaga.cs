@@ -23,6 +23,7 @@ namespace A2v10.ProcS.Chatbot
 
 		public override void Store(IDynamicObject storage, IResourceWrapper wrapper)
 		{
+			storage.Set("chatId", CorrelationId.Value);
 			storage.Set("botEngine", BotEngine.ToString());
 			storage.Set("botKey", BotKey);
 			storage.Set("message", DynamicObjectConverters.From(Message));
@@ -30,8 +31,7 @@ namespace A2v10.ProcS.Chatbot
 
 		public override void Restore(IDynamicObject storage, IResourceWrapper wrapper)
 		{
-			if (!Enum.TryParse<BotEngine>(storage.Get<String>("botEngine"), out var botEngine)) throw new Exception("Cannot restore IncomeMessage. Wrong BotEngine.");
-			BotEngine = botEngine;
+			BotEngine = storage.Get<BotEngine>("botEngine");
 			BotKey = storage.Get<String>("botKey");
 			Message = storage.GetDynamicObject("message").To<RestoredIncomingMessage>();
 		}
