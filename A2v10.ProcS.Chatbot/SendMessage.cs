@@ -17,10 +17,12 @@ namespace A2v10.ProcS.Chatbot
 		public ActivityExecutionResult Execute(IExecuteContext context)
 		{
 			Message.Text = context.Resolve(Message.Text);
-			var mess = new SendMessageMessage(Message);
-			mess.BotEngine = BotEngine;
-			mess.BotKey = BotKey;
-			mess.ChatId = Guid.Parse(context.Resolve(ChatId));
+			var mess = new SendMessageMessage(Message)
+			{
+				BotEngine = BotEngine,
+				BotKey = BotKey,
+				ChatId = Guid.Parse(context.Resolve(ChatId))
+			};
 			context.SendMessage(mess);
 			return ActivityExecutionResult.Complete;
 		}

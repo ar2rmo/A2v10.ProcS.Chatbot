@@ -53,11 +53,13 @@ namespace A2v10.ProcS.Chatbot.Tests
 			pmr.RegisterResources(rm, mgr);
 			pmr.RegisterResources(frm, mgr2);
 
-			
 
-			var impl = new Dictionary<Type, Type>();
-			impl.Add(typeof(BotCore.IIncomingMessage), typeof(BotIncMess));
-			impl.Add(typeof(BotCore.IKeyboard), null);
+
+			var impl = new Dictionary<Type, Type>
+			{
+				{ typeof(IIncomingMessage), typeof(BotIncMess) },
+				{ typeof(IKeyboard), null }
+			};
 			//impl.Add(typeof(BotCore.IButton), typeof(Button));
 
 			BaseClass.TestRegistred(rm, frm.TheList, impl);

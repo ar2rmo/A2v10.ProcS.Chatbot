@@ -28,7 +28,7 @@ namespace A2v10.ProcS.Chatbot.Tests
 
 	public class Services : IServiceProvider
 	{
-		private List<Object> services;
+		private readonly List<Object> services;
 
 		public Services(params Object[] svcs)
 		{

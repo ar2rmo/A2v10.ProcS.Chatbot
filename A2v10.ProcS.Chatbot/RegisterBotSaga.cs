@@ -100,7 +100,7 @@ namespace A2v10.ProcS.Chatbot
 
 		protected override async Task Handle(IHandleContext context, RegisterBotProcessingMessage message)
 		{
-			var bot = await botManager.GetBotAsync(message.BotEngine, message.BotKey);
+			await botManager.GetBotAsync(message.BotEngine, message.BotKey);
 			MasterProcessId = message.MasterProcessId;
 			ChatProcessIdentity = message.ChatProcessIdentity;
 			CorrelationId.Value = message.CorrelationId.Value;
@@ -108,15 +108,19 @@ namespace A2v10.ProcS.Chatbot
 
 		protected override Task Handle(IHandleContext context, InitBotChatMessage message)
 		{
-			var sp = new StartProcessMessage();
-			sp.ParentId = MasterProcessId;
-			sp.ProcessId = ChatProcessIdentity;
-			sp.Parameters = DynamicObjectConverters.From(message);
+			var sp = new StartProcessMessage
+			{
+				ParentId = MasterProcessId,
+				ProcessId = ChatProcessIdentity,
+				Parameters = DynamicObjectConverters.From(message)
+			};
 
-			var m = new IncomeMessage(message.ChatId);
-			m.BotEngine = message.BotEngine;
-			m.BotKey = message.BotKey;
-			m.Message = message.Message;
+			var m = new IncomeMessage(message.ChatId)
+			{
+				BotEngine = message.BotEngine,
+				BotKey = message.BotKey,
+				Message = message.Message
+			};
 
 			context.SendMessagesSequence(sp, m);
 
@@ -126,7 +130,7 @@ namespace A2v10.ProcS.Chatbot
 
 	internal class RegisterBotSagaFactory : ISagaFactory
 	{
-		private BotManager botManager;
+		private readonly BotManager botManager;
 		
 		public RegisterBotSagaFactory(BotManager botManager)
 		{
@@ -143,7 +147,7 @@ namespace A2v10.ProcS.Chatbot
 
 	public class RegisterBotSagaRegistrar : ISagaRegistrar
 	{
-		private Plugin plugin;
+		private readonly Plugin plugin;
 
 		public RegisterBotSagaRegistrar(Plugin plugin)
 		{

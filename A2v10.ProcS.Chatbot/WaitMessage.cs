@@ -22,10 +22,12 @@ namespace A2v10.ProcS.Chatbot
 			if (context.IsContinue) return ActivityExecutionResult.Complete;
 			var book = context.SetBookmark();
 			var ch = Guid.Parse(context.Resolve(ChatId));
-			var mess = new WaitMessageMessage(ch);
-			mess.BookmarkId = book;
-			mess.BotEngine = BotEngine;
-			mess.BotKey = BotKey;
+			var mess = new WaitMessageMessage(ch)
+			{
+				BookmarkId = book,
+				BotEngine = BotEngine,
+				BotKey = BotKey
+			};
 			context.SendMessage(mess);
 			return ActivityExecutionResult.Idle;
 		}

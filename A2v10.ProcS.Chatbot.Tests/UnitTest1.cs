@@ -50,14 +50,16 @@ namespace A2v10.ProcS.Chatbot.Tests
 			sp.Add(bus);
 			sp.Add(engine);
 
-			var param = new DynamicObject();
-			param["ChatId"] = "0c3af6d2-0000-0000-d2f6-3a0c00000000";
+			var param = new DynamicObject
+			{
+				["ChatId"] = "0c3af6d2-0000-0000-d2f6-3a0c00000000"
+			};
 			IInstance inst = await engine.StartWorkflow(new Identity("ChatBotTest.json"), param);
 
 			await bus.Process();
 
 			var plug = pmr.GetPlugin<Plugin>(Plugin.Name);
-			var bot = await plug.GetBotAsync(BotEngine.Mocking, "TestBot");
+			await plug.GetBotAsync(BotEngine.Mocking, "TestBot");
 
 			var m1json = msg1.Replace('\'', '"');
 			var m1do = DynamicObjectConverters.FromJson(m1json);

@@ -37,7 +37,7 @@ namespace A2v10.ProcS.Chatbot
 
 	internal class SendMessageSagaFactory : ISagaFactory
 	{
-		private BotManager botManager;
+		private readonly BotManager botManager;
 		
 		public SendMessageSagaFactory(BotManager botManager)
 		{
@@ -54,7 +54,7 @@ namespace A2v10.ProcS.Chatbot
 
 	public class SendMessageSagaRegistrar : ISagaRegistrar
 	{
-		private Plugin plugin;
+		private readonly Plugin plugin;
 
 		public SendMessageSagaRegistrar(Plugin plugin)
 		{

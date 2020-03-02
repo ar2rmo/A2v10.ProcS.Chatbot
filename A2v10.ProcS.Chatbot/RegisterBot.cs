@@ -17,8 +17,10 @@ namespace A2v10.ProcS.Chatbot
 
 		public ActivityExecutionResult Execute(IExecuteContext context)
 		{
-			var mess = new RegisterBotProcessingMessage(BotEngine, BotKey);
-			mess.ChatProcessIdentity = ChatProcessIdentity;
+			var mess = new RegisterBotProcessingMessage(BotEngine, BotKey)
+			{
+				ChatProcessIdentity = ChatProcessIdentity
+			};
 			context.SendMessage(mess);
 			return ActivityExecutionResult.Complete;
 		}

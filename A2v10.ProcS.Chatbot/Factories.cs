@@ -18,11 +18,12 @@ namespace A2v10.ProcS.Chatbot
 
 	internal class BotManager
 	{
-		private IDictionary<BotEngine, IBotFactory> factories;
-		private IDictionary<BotEngine, ConcurrentDictionary<String, BotWrapper>> bots;
+		private readonly IDictionary<BotEngine, IBotFactory> factories;
+		private readonly IDictionary<BotEngine, ConcurrentDictionary<String, BotWrapper>> bots;
 
 		public BotManager(Microsoft.Extensions.Configuration.IConfiguration configuration)
 		{
+			#pragma warning disable IDE0028 // Simplify collection initialization
 			factories = new Dictionary<BotEngine, IBotFactory>();
 			factories.Add(BotEngine.Mocking, new MockingBotFactory());
 			factories.Add(BotEngine.Telegram, new TelegramBotFactory(configuration.GetSection("Telegram")));
@@ -30,6 +31,7 @@ namespace A2v10.ProcS.Chatbot
 			bots = new Dictionary<BotEngine, ConcurrentDictionary<String, BotWrapper>>();
 			bots.Add(BotEngine.Mocking, new ConcurrentDictionary<String, BotWrapper>(StringComparer.InvariantCultureIgnoreCase));
 			bots.Add(BotEngine.Telegram, new ConcurrentDictionary<String, BotWrapper>(StringComparer.InvariantCultureIgnoreCase));
+			#pragma warning restore IDE0028 // Simplify collection initialization
 		}
 
 		protected class BotWrapper
@@ -91,7 +93,7 @@ namespace A2v10.ProcS.Chatbot
 
 	internal class TelegramBotFactory : IBotFactory
 	{
-		private Microsoft.Extensions.Configuration.IConfiguration confs;
+		private readonly Microsoft.Extensions.Configuration.IConfiguration confs;
 
 		public TelegramBotFactory(Microsoft.Extensions.Configuration.IConfiguration configuration)
 		{
@@ -102,9 +104,11 @@ namespace A2v10.ProcS.Chatbot
 		{
 			var cs = confs.GetSection(key);
 
-			var cfg = new BotCore.Types.Base.Configure();
-			cfg.Token = cs["Token"];
-			cfg.WebHook = cs["WebHookUri"];
+			var cfg = new BotCore.Types.Base.Configure
+			{
+				Token = cs["Token"],
+				WebHook = cs["WebHookUri"]
+			};
 			return new BotCore.Telegram.TelegramBot(cfg);
 		}
 	}
@@ -174,10 +178,12 @@ namespace A2v10.ProcS.Chatbot
 
 		public IEnumerable<IOutgoingMessage> ProcessIncomingMessage(IChatSession sess, IIncomingMessage msg)
 		{
-			var m = new IncomeMessage(sess.ChatId);
-			m.BotEngine = engine;
-			m.BotKey = key;
-			m.Message = msg;
+			var m = new IncomeMessage(sess.ChatId)
+			{
+				BotEngine = engine,
+				BotKey = key,
+				Message = msg
+			};
 			bus.Send(m);
 			yield break;
 		}

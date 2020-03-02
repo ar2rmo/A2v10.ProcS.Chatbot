@@ -107,9 +107,11 @@ namespace A2v10.ProcS.Chatbot
 			}
 			else
 			{
-				var m = new InitBotChatMessage(message.BotEngine, message.BotKey);
-				m.ChatId = message.CorrelationId.Value;
-				m.Message = message.Message;
+				var m = new InitBotChatMessage(message.BotEngine, message.BotKey)
+				{
+					ChatId = message.CorrelationId.Value,
+					Message = message.Message
+				};
 				context.SendMessage(m);
 				IsComplete = true;
 			}
@@ -119,7 +121,7 @@ namespace A2v10.ProcS.Chatbot
 
 	internal class WaitMessageSagaFactory : ISagaFactory
 	{
-		private BotManager botManager;
+		private readonly BotManager botManager;
 		
 		public WaitMessageSagaFactory(BotManager botManager)
 		{
@@ -136,7 +138,7 @@ namespace A2v10.ProcS.Chatbot
 
 	public class WaitMessageSagaRegistrar : ISagaRegistrar
 	{
-		private Plugin plugin;
+		private readonly Plugin plugin;
 
 		public WaitMessageSagaRegistrar(Plugin plugin)
 		{
