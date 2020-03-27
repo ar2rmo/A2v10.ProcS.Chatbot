@@ -16,6 +16,8 @@ namespace A2v10.ProcS.Chatbot.Tests
 		[TestMethod]
 		public async Task RunWorkflow()
 		{
+			var lg = new A2v10.ProcS.Tests.FakeLogger();
+			
 			var epm = new EndpointManager();
 
 			var sp = new Services(epm);
@@ -45,8 +47,8 @@ namespace A2v10.ProcS.Chatbot.Tests
 			var keeper = new InMemorySagaKeeper(mgr.Resolver);
 			var scriptEngine = new ScriptEngine();
 			var repository = new Repository(storage, storage);
-			var bus = new ServiceBus(taskManager, keeper, repository, scriptEngine);
-			var engine = new WorkflowEngine(repository, bus, scriptEngine);
+			var bus = new ServiceBus(taskManager, keeper, repository, scriptEngine, lg);
+			var engine = new WorkflowEngine(repository, bus, scriptEngine, lg);
 			sp.Add(bus);
 			sp.Add(engine);
 
