@@ -5,7 +5,7 @@
 	"States": {
 		"Init": {
 			"OnEntry": {
-				"$type": "A2v10.ProcS.Chatbot.WaitMessageActivity, A2v10.ProcS.Chatbot",
+				"$res": "com.a2.procs.chatbot:WaitMessageActivity",
 				"BotEngine": "Telegram",
 				"BotKey": "TestBot",
 				"ChatId": "{{params.ChatId}}"
@@ -22,7 +22,7 @@
 		},
 		"AskName": {
 			"OnEntry": {
-				"$type": "A2v10.ProcS.Chatbot.SendMessageActivity, A2v10.ProcS.Chatbot",
+				"$res": "com.a2.procs.chatbot:SendMessageActivity",
 				"BotEngine": "Telegram",
 				"BotKey": "TestBot",
 				"ChatId": "{{params.ChatId}}",
@@ -35,13 +35,13 @@
 		},
 		"WaitForName": {
 			"OnEntry": {
-				"$type": "A2v10.ProcS.Chatbot.WaitMessageActivity, A2v10.ProcS.Chatbot",
+				"$res": "com.a2.procs.chatbot:WaitMessageActivity",
 				"BotEngine": "Telegram",
 				"BotKey": "TestBot",
 				"ChatId": "{{params.ChatId}}"
 			},
 			"OnExit": {
-				"$type": "A2v10.ProcS.CodeActivity, A2v10.ProcS",
+				"$res": "com.a2v10.procs:CodeActivity",
 				"Code": "data.name = reply.Message.Text"
 			},
 			"Transitions": {
@@ -52,7 +52,7 @@
 		},
 		"Hello": {
 			"OnEntry": {
-				"$type": "A2v10.ProcS.Chatbot.SendMessageActivity, A2v10.ProcS.Chatbot",
+				"$res": "com.a2.procs.chatbot:SendMessageActivity",
 				"BotEngine": "Telegram",
 				"BotKey": "TestBot",
 				"ChatId": "{{params.ChatId}}",
@@ -65,7 +65,7 @@
 		},
 		"HelloFather": {
 			"OnEntry": {
-				"$type": "A2v10.ProcS.Chatbot.SendMessageActivity, A2v10.ProcS.Chatbot",
+				"$res": "com.a2.procs.chatbot:SendMessageActivity",
 				"BotEngine": "Telegram",
 				"BotKey": "TestBot",
 				"ChatId": "0c3af6d2-0000-0000-d2f6-3a0c00000000",
@@ -78,13 +78,13 @@
 		},
 		"Dialog": {
 			"OnEntry": {
-				"$type": "A2v10.ProcS.Chatbot.WaitMessageActivity, A2v10.ProcS.Chatbot",
+				"$res": "com.a2.procs.chatbot:WaitMessageActivity",
 				"BotEngine": "Telegram",
 				"BotKey": "TestBot",
 				"ChatId": "{{params.ChatId}}"
 			},
 			"OnExit": {
-				"$type": "A2v10.ProcS.CodeActivity, A2v10.ProcS",
+				"$res": "com.a2v10.procs:CodeActivity",
 				"Code": "data.said = reply.Message.Text"
 			},
 			"Transitions": {
@@ -99,7 +99,7 @@
 		},
 		"SayFather": {
 			"OnEntry": {
-				"$type": "A2v10.ProcS.Chatbot.SendMessageActivity, A2v10.ProcS.Chatbot",
+				"$res": "com.a2.procs.chatbot:SendMessageActivity",
 				"BotEngine": "Telegram",
 				"BotKey": "TestBot",
 				"ChatId": "0c3af6d2-0000-0000-d2f6-3a0c00000000",
