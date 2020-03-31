@@ -102,7 +102,8 @@ namespace A2v10.ProcS.Chatbot
 		{
 			if (IsWaiting)
 			{
-				context.ResumeBookmark(BookmarkId, DynamicObjectConverters.From(message));
+				var msg = new ResumeBookmarkMessage(BookmarkId, DynamicObjectConverters.From(message));
+				context.SendMessage(msg);
 				IsComplete = true;
 			}
 			else
