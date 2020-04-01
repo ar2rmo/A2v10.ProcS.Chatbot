@@ -72,7 +72,7 @@ namespace A2v10.ProcS.Chatbot
 
 	public class RegisterBotProcessingSaga : SagaBaseDispatched<String, RegisterBotProcessingMessage, InitBotChatMessage>
 	{
-		public const string ukey = Plugin.Name + ":" + nameof(RegisterCallbackSaga);
+		public const string ukey = Plugin.Name + ":" + nameof(RegisterBotProcessingSaga);
 
 		private readonly BotManager botManager;
 

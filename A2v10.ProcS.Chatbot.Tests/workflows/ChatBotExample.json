@@ -5,7 +5,7 @@
 	"States": {
 		"Init": {
 			"OnEntry": {
-				"$res": "com.a2.procs.chatbot:WaitMessageActivity",
+				"$res": "com.a2v10.procs.chatbot:WaitMessageActivity",
 				"BotEngine": "Telegram",
 				"BotKey": "TestBot",
 				"ChatId": "{{params.ChatId}}"
@@ -22,7 +22,7 @@
 		},
 		"AskName": {
 			"OnEntry": {
-				"$res": "com.a2.procs.chatbot:SendMessageActivity",
+				"$res": "com.a2v10.procs.chatbot:SendMessageActivity",
 				"BotEngine": "Telegram",
 				"BotKey": "TestBot",
 				"ChatId": "{{params.ChatId}}",
@@ -35,7 +35,7 @@
 		},
 		"WaitForName": {
 			"OnEntry": {
-				"$res": "com.a2.procs.chatbot:WaitMessageActivity",
+				"$res": "com.a2v10.procs.chatbot:WaitMessageActivity",
 				"BotEngine": "Telegram",
 				"BotKey": "TestBot",
 				"ChatId": "{{params.ChatId}}"
@@ -52,7 +52,7 @@
 		},
 		"Hello": {
 			"OnEntry": {
-				"$res": "com.a2.procs.chatbot:SendMessageActivity",
+				"$res": "com.a2v10.procs.chatbot:SendMessageActivity",
 				"BotEngine": "Telegram",
 				"BotKey": "TestBot",
 				"ChatId": "{{params.ChatId}}",
@@ -65,7 +65,7 @@
 		},
 		"HelloFather": {
 			"OnEntry": {
-				"$res": "com.a2.procs.chatbot:SendMessageActivity",
+				"$res": "com.a2v10.procs.chatbot:SendMessageActivity",
 				"BotEngine": "Telegram",
 				"BotKey": "TestBot",
 				"ChatId": "0c3af6d2-0000-0000-d2f6-3a0c00000000",
@@ -78,7 +78,7 @@
 		},
 		"Dialog": {
 			"OnEntry": {
-				"$res": "com.a2.procs.chatbot:WaitMessageActivity",
+				"$res": "com.a2v10.procs.chatbot:WaitMessageActivity",
 				"BotEngine": "Telegram",
 				"BotKey": "TestBot",
 				"ChatId": "{{params.ChatId}}"
@@ -99,7 +99,7 @@
 		},
 		"SayFather": {
 			"OnEntry": {
-				"$res": "com.a2.procs.chatbot:SendMessageActivity",
+				"$res": "com.a2v10.procs.chatbot:SendMessageActivity",
 				"BotEngine": "Telegram",
 				"BotKey": "TestBot",
 				"ChatId": "0c3af6d2-0000-0000-d2f6-3a0c00000000",

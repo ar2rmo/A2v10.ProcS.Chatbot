@@ -10,7 +10,7 @@ namespace A2v10.ProcS.Chatbot
 {
 	public class Plugin : IPlugin
 	{
-		public const string Name = "com.a2.procs.chatbot";
+		public const string Name = "com.a2v10.procs.chatbot";
 
 		internal BotManager BotManager { get; private set; }
 
