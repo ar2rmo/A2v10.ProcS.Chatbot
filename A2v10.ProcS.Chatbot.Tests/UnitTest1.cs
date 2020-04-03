@@ -17,7 +17,9 @@ namespace A2v10.ProcS.Chatbot.Tests
 		public async Task RunWorkflow()
 		{
 			var nm = new NotifyManager();
-			
+
+			var configuration = new ConfigurationBuilder().Build();
+
 			var scriptEngine = new ScriptEngine();
 
 			var lg = new A2v10.ProcS.Tests.FakeLogger();
@@ -30,15 +32,13 @@ namespace A2v10.ProcS.Chatbot.Tests
 
 			var storage = new A2v10.ProcS.Tests.FakeStorage(rm, "../../../workflows/");
 
-			var repository = new Repository(storage, storage); ;
+			var repository = new Repository(storage, storage, configuration);
 
 			var mgr = new SagaManager(sp);
 
 			var pmr = new PluginManager(sp);
 
 			String pluginPath = ChatbotTests.GetPluginPath();
-
-			var configuration = new ConfigurationBuilder().Build();
 
 			ProcS.RegisterSagas(rm, mgr, scriptEngine, repository);
 			ProcS.RegisterActivities(rm);
