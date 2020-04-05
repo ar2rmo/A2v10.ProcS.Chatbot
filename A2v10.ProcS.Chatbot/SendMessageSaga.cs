@@ -31,7 +31,7 @@ namespace A2v10.ProcS.Chatbot
 		protected override async Task Handle(IHandleContext context, SendMessageMessage message)
 		{
 			var bot = await botManager.GetBotAsync(message.BotEngine, message.BotKey);
-			await bot.SendMessageAsync(new ChatSession(message.ChatId), message.Message);
+			await bot.SendMessageAsync(new ChatSession(message.ChatId), message.Message.Message);
 		}
 	}
 
