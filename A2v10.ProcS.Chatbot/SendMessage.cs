@@ -47,6 +47,7 @@ namespace A2v10.ProcS.Chatbot
 		public String ChatId { get; set; }
 		public IDynamicObject Message { get; set; }
 		public List<IDynamicObject> Messages { get; set; }
+		public Boolean Sync { get; set; }
 
 		protected IEnumerable<IDynamicObject> GetMessages()
 		{
@@ -70,10 +71,22 @@ namespace A2v10.ProcS.Chatbot
 					BotEngine = BotEngine,
 					BotKey = BotKey,
 					ChatId = chat
-				};
-			}).ToArray();
-			context.SendMessagesSequence(msgs);
-			return ActivityExecutionResult.Complete;
+				} as Infrastructure.IMessage;
+			}).ToList();
+			if (Sync)
+			{
+				var book = context.SetBookmark();
+				var rmsg = new ResumeBookmarkMessage(book, new DynamicObject());
+				msgs.Add(rmsg);
+				context.SendMessagesSequence(msgs.ToArray());
+				return ActivityExecutionResult.Idle;
+			}
+			else
+			{
+				context.SendMessagesSequence(msgs.ToArray());
+				return ActivityExecutionResult.Complete;
+			}
+			
 		}
 	}
 
