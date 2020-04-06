@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using A2v10.ProcS.Infrastructure;
 using BotCore;
@@ -44,19 +46,33 @@ namespace A2v10.ProcS.Chatbot
 		public String BotKey { get; set; }
 		public String ChatId { get; set; }
 		public IDynamicObject Message { get; set; }
+		public List<IDynamicObject> Messages { get; set; }
+
+		protected IEnumerable<IDynamicObject> GetMessages()
+		{
+			if (Message != null)
+				yield return Message;
+			if (Messages != null)
+				foreach (var m in Messages)
+					yield return m;
+		}
 
 		public ActivityExecutionResult Execute(IExecuteContext context)
 		{
-			var m = new StorableOutgoingMessage();
-			m.Restore(Message, null);
-			m.Resolve(context);
-			var mess = new SendMessageMessage(m)
+			var chat = Guid.Parse(context.Resolve(ChatId));
+			var msgs = GetMessages().Select(msg =>
 			{
-				BotEngine = BotEngine,
-				BotKey = BotKey,
-				ChatId = Guid.Parse(context.Resolve(ChatId))
-			};
-			context.SendMessage(mess);
+				var m = new StorableOutgoingMessage();
+				m.Restore(msg, null);
+				m.Resolve(context);
+				return new SendMessageMessage(m)
+				{
+					BotEngine = BotEngine,
+					BotKey = BotKey,
+					ChatId = chat
+				};
+			}).ToArray();
+			context.SendMessagesSequence(msgs);
 			return ActivityExecutionResult.Complete;
 		}
 	}
