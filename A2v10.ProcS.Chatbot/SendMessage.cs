@@ -60,6 +60,8 @@ namespace A2v10.ProcS.Chatbot
 
 		public ActivityExecutionResult Execute(IExecuteContext context)
 		{
+			if (context.IsContinue)
+				return ActivityExecutionResult.Complete;
 			var chat = Guid.Parse(context.Resolve(ChatId));
 			var msgs = GetMessages().Select(msg =>
 			{
